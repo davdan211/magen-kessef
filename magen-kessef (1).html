@@ -1,0 +1,3210 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>מגן כסף — מדד החיים האמיתיים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f2f5fb;
+  --bg2:#e8eef8;
+  --glass:rgba(255,255,255,.95);
+  --glass2:#ffffff;
+  --glass3:#ffffff;
+  --bord:rgba(0,30,100,.1);
+  --bord2:rgba(0,30,100,.14);
+  --text:#0d1928;
+  --mut:#5a6e8a;
+  --mut2:#3d5070;
+  --blue:#00b8ff;
+  --blue2:#0070dd;
+  --blue-glow:rgba(0,184,255,.35);
+  --blue-dim:rgba(0,184,255,.08);
+  --green:#007a45;
+  --green2:#00693b;
+  --green-glow:rgba(0,122,69,.25);
+  --green-dim:rgba(0,122,69,.07);
+  --amber:#ffb020;
+  --amber-glow:rgba(255,176,32,.3);
+  --amber-dim:rgba(255,176,32,.07);
+  --red:#ff3b5c;
+  --red-glow:rgba(255,59,92,.3);
+  --red-dim:rgba(255,59,92,.07);
+  --purple:#a855f7;
+  --coral:#ff6b35;
+  --pink:#f472b6;
+  --yellow:#b8860b;
+  --yellow2:#8b6000;
+  --yellow-glow:rgba(184,134,11,.3);
+  --yellow-dim:rgba(184,134,11,.08);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;line-height:1.5;overflow-x:hidden;}
+body{display:flex;flex-direction:column;min-height:100vh;position:relative;}
+
+/* ── AMBIENT BACKGROUND (light) ─────────────────────── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 20%,rgba(0,120,255,.04) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 50% at 85% 80%,rgba(0,184,255,.03) 0%,transparent 60%);
+}
+#bg-grid{display:none;}
+
+/* ── SCROLLBAR ────────────────────────────────────────── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#00b8ff44;border-radius:99px;}
+::-webkit-scrollbar-thumb:hover{background:#00b8ff88;}
+
+/* ── HEADER ──────────────────────────────────────────── */
+/* ── NEWS TICKER ─────────────────────────────────── */
+#ticker-wrap{
+  background:linear-gradient(135deg,#1a2332 0%,#0f1621 100%);
+  border-bottom:2px solid rgba(102,126,234,.3);
+  padding:8px 0;overflow:hidden;position:relative;
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(102,126,234,.2);
+}
+.ticker-badge{
+  flex-shrink:0;height:100%;padding:0 16px;
+  display:flex;align-items:center;gap:7px;
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  font-size:10px;font-weight:900;color:#fff;letter-spacing:.1em;
+  text-transform:uppercase;white-space:nowrap;
+  box-shadow:6px 0 20px rgba(0,112,221,.6);position:relative;z-index:1;
+}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:#fff;flex-shrink:0;}
+@keyframes tb-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,255,255,.6)}60%{opacity:.5;box-shadow:0 0 0 4px transparent}}
+.tb-dot{}
+.ticker-track{
+  flex:1;overflow:hidden;height:100%;
+  -webkit-mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent);
+  mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent);
+}
+.ticker-inner{
+  display:inline-flex;align-items:center;height:100%;
+  
+  white-space:nowrap;
+}
+.ticker-inner:hover{animation-play-state:paused;cursor:default;}
+@keyframes ticker-go{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ti{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:0 24px;font-size:12px;font-weight:600;color:#b8d0ee;
+  transition:color .18s;
+}
+.ti:hover{color:#fff;}
+.ti-icon{font-size:13px;flex-shrink:0;}
+.ti-val{font-weight:800;font-size:12px;}
+.ti-val.up{color:#00ff9f;text-shadow:0 0 10px rgba(0,255,159,.6), 0 0 20px rgba(0,255,159,.3);font-weight:900;}
+.ti-val.dn{color:#ff6b9d;text-shadow:0 0 10px rgba(255,107,157,.6), 0 0 20px rgba(255,107,157,.3);font-weight:900;}
+.ti-val.neu{color:var(--blue);text-shadow:0 0 6px var(--blue-glow);}
+.ti-dot{display:inline-block;width:3px;height:3px;border-radius:50%;
+  background:rgba(0,184,255,.35);margin:0 6px;vertical-align:middle;flex-shrink:0;}
+
+#header{
+  height:64px;position:sticky;top:36px;z-index:300;flex-shrink:0;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--bord2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+  box-shadow:0 1px 0 var(--bord),0 4px 20px rgba(0,30,100,.06);
+}
+
+
+
+  33%{transform:translate(30px,-30px) rotate(120deg);}
+  66%{transform:translate(-20px,20px) rotate(240deg);}
+}
+
+  50%{transform:translate(-40px,40px) rotate(180deg);}
+}
+
+  25%{transform:translate(20px,30px);}
+  50%{transform:translate(-30px,-20px);}
+  75%{transform:translate(40px,-40px);}
+}
+
+
+
+
+  to{opacity:1;transform:translateY(0);}
+}
+
+  to{opacity:1;transform:translateX(0);}
+}
+
+  to{opacity:1;transform:scale(1);}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  50%{background-position:100% 100%;}
+}
+
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.logo{display:flex;align-items:center;gap:13px;}
+.logo-mark{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  box-shadow:0 0 20px var(--blue-glow),0 4px 12px rgba(0,0,0,.15);
+  position:relative;
+}
+
+  50%{filter:drop-shadow(0 4px 20px rgba(118,75,162,.5)) brightness(1.1);}
+}
+
+  50%{box-shadow:0 0 25px rgba(255,215,0,.8), 0 4px 15px rgba(255,237,78,.5);}
+}
+
+  50%{box-shadow:0 0 50px rgba(255,215,0,.6), 0 8px 40px rgba(254,202,87,.5);}
+}
+
+  50%{transform:translateY(-4px) scale(1.05);}
+}
+.logo-mark::after{
+  content:'';position:absolute;inset:-2px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,215,0,.4),transparent);
+  opacity:.6;pointer-events:none;z-index:-1;
+  
+}
+
+  50%{opacity:.8;}
+}
+.logo-name{font-size:18px;font-weight:900;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#0d1928 40%,var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-tag{font-size:10px;color:rgba(10,20,50,.5);font-weight:500;margin-top:-2px;}
+.header-right{display:flex;align-items:center;gap:12px;}
+.date-chip{
+  font-size:11px;color:rgba(255,255,255,.95);font-weight:700;
+  padding:6px 14px;
+  background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.15));
+  backdrop-filter:blur(10px);
+  border-radius:99px;border:1px solid rgba(255,255,255,.3);
+  box-shadow:0 4px 15px rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.3);
+}
+.live-pill{
+  display:flex;align-items:center;gap:7px;
+  background:var(--green-dim);border:1px solid rgba(0,255,170,.25);
+  border-radius:99px;padding:5px 14px;
+  font-size:11px;font-weight:700;color:var(--green);
+  box-shadow:0 0 12px var(--green-dim);
+}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+@keyframes ripple{0%,100%{box-shadow:0 0 0 0 rgba(0,255,170,.5)}60%{box-shadow:0 0 0 6px transparent}}
+.pulse{}
+
+/* ── LAYOUT ──────────────────────────────────────────── */
+#layout{display:flex;flex:1;overflow:hidden;position:relative;z-index:1;}
+
+/* ── SIDEBAR ─────────────────────────────────────────── */
+#sidebar{
+  width:280px;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(248,251,255,.98) 0%,rgba(240,245,255,.98) 100%);
+  backdrop-filter:blur(20px);
+  border-right:2px solid rgba(102,126,234,.15);
+  box-shadow:4px 0 30px rgba(102,126,234,.1), inset -1px 0 0 rgba(102,126,234,.08);
+  overflow-y:auto;display:flex;flex-direction:column;padding:20px 12px;
+  position:relative;
+}
+
+.sb-label{
+  padding:0 8px 14px;margin-bottom:4px;
+  font-size:10px;font-weight:700;color:rgba(0,0,0,.45);
+  letter-spacing:.15em;text-transform:uppercase;
+  border-bottom:1px solid rgba(0,100,255,.1);
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:12px 13px;margin-bottom:5px;
+  border-radius:14px;cursor:pointer;
+  border:1px solid rgba(0,30,100,.08);background:#f8fafd;
+  color:#111;position:relative;overflow:hidden;
+  transition:background .22s,border-color .22s,box-shadow .22s,transform .22s;
+}
+.nav-item::before{
+  content:'';position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(135deg,rgba(184,134,11,.08),rgba(139,96,0,.04));
+  opacity:0;transition:opacity .22s;pointer-events:none;
+}
+.nav-item:hover:not(.off){
+  background:rgba(255,255,255,.04);border-color:rgba(0,30,100,.12);
+  color:#000;
+}
+.nav-item:hover:not(.off)::before{opacity:1;}
+.nav-item.on{
+  background:linear-gradient(135deg,rgba(184,134,11,.14),rgba(139,96,0,.08));
+  border-color:rgba(184,134,11,.4);color:#1a0e00;
+  box-shadow:0 0 14px rgba(184,134,11,.12),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.nav-item.on::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:3px;border-radius:0 2px 2px 0;
+  background:linear-gradient(180deg,#b8860b,#8b6000);
+  box-shadow:none;
+}
+.nav-item.off{opacity:.5;cursor:not-allowed;}
+.nav-ic{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  background:rgba(0,30,100,.05);
+  border:1px solid rgba(0,30,100,.08);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .22s;position:relative;overflow:hidden;
+}
+.nav-item.on .nav-ic{
+  background:linear-gradient(135deg,rgba(184,134,11,.12),rgba(139,96,0,.07));
+  border-color:rgba(184,134,11,.3);
+  box-shadow:0 0 10px rgba(184,134,11,.1);
+}
+.nav-item:hover:not(.off):not(.on) .nav-ic{
+  background:rgba(184,134,11,.06);
+  border-color:rgba(184,134,11,.2);
+}
+/* SVG icon color control */
+.nav-ic svg{transition:all .22s;}
+.nav-item .nav-ic svg .ico-stroke{stroke:rgba(60,90,140,.45);transition:stroke .22s,filter .22s;}
+.nav-item .nav-ic svg .ico-fill{fill:rgba(60,90,140,.45);transition:fill .22s,filter .22s;}
+.nav-item:hover:not(.off) .nav-ic svg .ico-stroke{stroke:rgba(0,80,180,.8);}
+.nav-item:hover:not(.off) .nav-ic svg .ico-fill{fill:rgba(0,80,180,.8);}
+.nav-item.on .nav-ic svg .ico-stroke{
+  stroke:#8b6000;
+}
+
+.nav-item.on .nav-ic svg .ico-fill{
+  fill:#8b6000;
+}
+
+.nav-name{font-size:14px;font-weight:800;letter-spacing:-.01em;line-height:1.2;}
+.nav-hint{font-size:10px;color:rgba(0,0,0,.45);font-weight:400;margin-top:2px;transition:color .22s;}
+.nav-item:hover:not(.off) .nav-hint{color:rgba(0,0,0,.7);}
+.nav-item.on .nav-hint{color:rgba(80,50,0,.7);}
+.nav-chip{
+  font-size:9px;font-weight:800;margin-right:auto;
+  padding:3px 9px;border-radius:99px;letter-spacing:.04em;
+  background:linear-gradient(135deg,#ffd700,#ffed4e);
+  color:#fff;box-shadow:none;
+}
+.sb-footer{
+  margin-top:auto;padding:16px 8px 0;
+  border-top:1px solid rgba(0,80,180,.08);
+  font-size:10px;color:rgba(0,0,0,.5);line-height:2.2;
+}
+
+/* ── MAIN ────────────────────────────────────────────── */
+#main{flex:1;overflow-y:auto;padding:32px 36px;}
+
+/* PAGE HEADER */
+.page-head{margin-bottom:28px;}
+.page-title-row{display:flex;align-items:center;gap:16px;margin-bottom:6px;}
+
+.page-ic{
+  width:56px;height:56px;border-radius:16px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(102,126,234,.15),rgba(118,75,162,.1));
+  border:2px solid rgba(102,126,234,.3);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  box-shadow:0 0 30px rgba(102,126,234,.2),0 4px 20px rgba(118,75,162,.15);
+  transition:all .4s ease;
+}
+
+
+
+
+  10%{opacity:1;transform:translate(10px,-10px) scale(1);}
+  20%{opacity:0;transform:translate(20px,-20px) scale(0);}
+}
+
+.page-title{
+  font-size:28px;font-weight:900;letter-spacing:-.02em;line-height:1.2;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 2px 10px rgba(102,126,234,.3));
+  
+}
+.page-sub{font-size:13px;color:rgba(10,20,50,.6);font-weight:500;}
+.divider{height:2px;margin-top:18px;border-radius:99px;
+  background:linear-gradient(90deg,var(--blue),rgba(0,184,255,.3),transparent);}
+
+/* ── GLASS CARD MIXIN ────────────────────────────────── */
+.gcard{
+  background:#fff;
+  border:1px solid var(--bord2);border-radius:20px;
+  box-shadow:0 2px 16px rgba(0,30,100,.07),0 1px 4px rgba(0,30,100,.05);
+  transition:box-shadow .25s,transform .25s,border-color .25s;
+}
+
+.gcard:hover{
+  box-shadow:0 0 24px rgba(0,120,255,.1),0 6px 24px rgba(0,30,100,.1);
+  border-color:rgba(0,120,255,.2);transform:translateY(-2px);
+}
+
+.gcard.neon-blue{
+  border-color:rgba(0,150,255,.3);
+  box-shadow:0 0 30px rgba(0,150,255,.15),0 8px 30px rgba(0,120,255,.1);
+  
+}
+
+  50%{box-shadow:0 0 45px rgba(0,150,255,.3),0 12px 40px rgba(0,120,255,.2);}
+}
+.gcard.neon-green{
+  border-color:rgba(0,180,100,.3);
+  box-shadow:0 0 30px rgba(0,180,100,.15),0 8px 30px rgba(0,150,80,.1);
+}
+.gcard.neon-amber{
+  border-color:rgba(254,202,87,.4);
+  box-shadow:0 0 30px rgba(254,202,87,.2),0 8px 30px rgba(250,177,160,.15);
+}
+
+/* ── INPUT CARD ──────────────────────────────────────── */
+.layout-2{display:grid;grid-template-columns:280px 1fr;gap:22px;}
+.input-card{padding:26px;align-self:start;}
+.ic-head{
+  font-size:11px;font-weight:800;
+  background:linear-gradient(90deg,var(--blue),var(--blue2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:22px;display:flex;align-items:center;gap:8px;
+}
+.ic-head::before{
+  content:'';width:3px;height:14px;border-radius:99px;flex-shrink:0;
+  background:linear-gradient(180deg,var(--blue),var(--blue2));
+  box-shadow:0 0 6px var(--blue-glow);
+}
+.field{margin-bottom:16px;}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--mut2);
+  letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px;}
+.field input,.field select{
+  width:100%;padding:12px 14px;border-radius:12px;
+  border:1px solid var(--bord2);background:#f8fafd;
+  color:var(--text);font-size:14px;font-family:inherit;font-weight:600;
+  outline:none;direction:rtl;transition:all .2s;-webkit-appearance:none;
+}
+.field input:focus,.field select:focus{
+  border-color:rgba(102,126,234,.6);
+  background:rgba(102,126,234,.05);
+  box-shadow:0 0 20px rgba(102,126,234,.2), 0 0 40px rgba(118,75,162,.1);
+  transform:scale(1.01);
+  box-shadow:0 0 0 3px rgba(0,184,255,.12),0 0 16px rgba(0,184,255,.08);
+}
+.field input::placeholder{color:var(--mut);}
+.kids-row{display:flex;gap:5px;}
+.kid-btn{
+  flex:1;padding:10px 0;border-radius:10px;
+  border:1px solid var(--bord2);background:#f8fafd;
+  color:rgba(30,60,100,.65);font-size:14px;font-weight:800;
+  cursor:pointer;font-family:inherit;transition:all .18s;
+}
+.kid-btn:hover{border-color:rgba(0,120,255,.4);color:var(--blue);box-shadow:0 0 8px rgba(0,120,255,.1);}
+.kid-btn.on{
+  background:linear-gradient(135deg,rgba(0,112,221,.15),rgba(0,184,255,.1));
+  border-color:var(--blue);color:var(--blue);
+  box-shadow:0 0 16px rgba(0,184,255,.3),inset 0 1px 0 rgba(255,255,255,.1);
+}
+.go-btn{
+  padding:13px 32px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  color:#fff;font-size:15px;font-weight:900;font-family:inherit;
+  cursor:pointer;letter-spacing:.02em;position:relative;overflow:hidden;
+  box-shadow:0 8px 25px rgba(102,126,234,.35), 0 0 40px rgba(118,75,162,.2), inset 0 1px 0 rgba(255,255,255,.2);
+  transition:all .3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-style:preserve-3d;
+}
+.go-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  border-radius:13px;
+}
+.go-btn:hover{
+  box-shadow:0 12px 35px rgba(102,126,234,.5), 0 0 60px rgba(118,75,162,.3), inset 0 1px 0 rgba(255,255,255,.3);
+  transform:translateY(-3px) scale(1.05);
+}
+.go-btn:active{transform:scale(.98);}
+.gross-note{
+  margin-top:12px;padding:11px 14px;
+  background:rgba(255,176,32,.07);border:1px solid rgba(255,176,32,.2);
+  border-radius:11px;font-size:11px;color:var(--amber);
+  line-height:1.7;font-weight:600;
+}
+
+/* ── EMPTY STATE ─────────────────────────────────────── */
+.empty{
+  background:rgba(245,248,255,.97);backdrop-filter:blur(20px);
+  border-radius:24px;display:flex;align-items:center;
+  justify-content:center;min-height:400px;flex-direction:column;gap:0;
+  position:relative;overflow:hidden;
+  /* neon purple animated border via box-shadow + pseudo */
+}
+/* rotating neon border using conic-gradient */
+.empty::before{
+  content:'';position:absolute;inset:-2px;border-radius:26px;z-index:0;
+  background:conic-gradient(from var(--angle,0deg),
+    transparent 0deg, transparent 60deg,
+    #a855f7 90deg, #7c3aed 120deg, #c084fc 150deg,
+    transparent 180deg, transparent 240deg,
+    #a855f7 270deg, #7c3aed 300deg, #c084fc 330deg,
+    transparent 360deg);
+  
+}
+@property --angle{syntax:'<angle>';initial-value:0deg;inherits:false;}
+@keyframes spin-border{to{--angle:360deg}}
+/* fallback for browsers without @property */
+@keyframes spin-border-fallback{
+  0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)}
+}
+.empty::after{
+  content:'';position:absolute;inset:2px;border-radius:22px;z-index:1;
+  background:rgba(245,248,255,.97);
+}
+.empty > *{position:relative;z-index:2;}
+
+/* purple glow pulse behind the box */
+.empty-glow{
+  position:absolute;inset:0;border-radius:24px;z-index:0;pointer-events:none;
+  box-shadow:0 0 60px rgba(168,85,247,.25),0 0 120px rgba(124,58,237,.12),inset 0 0 40px rgba(168,85,247,.07);
+  
+}
+@keyframes glow-pulse{0%,100%{opacity:.7}50%{opacity:1}}
+
+/* ── FUTURISTIC ANIMATION (replaces emoji) ── */
+.empty-orb{
+  width:120px;height:120px;position:relative;margin-bottom:28px;
+}
+.orb-ring{
+  position:absolute;border-radius:50%;border:2px solid transparent;
+  animation-timing-function:linear;animation-iteration-count:infinite;
+}
+.orb-ring-1{
+  inset:0;border-top-color:#a855f7;border-right-color:#7c3aed33;
+  box-shadow:0 0 16px rgba(168,85,247,.5),inset 0 0 16px rgba(168,85,247,.1);
+  
+}
+.orb-ring-2{
+  inset:12px;border-bottom-color:#c084fc;border-left-color:#a855f733;
+  box-shadow:0 0 12px rgba(192,132,252,.4);
+  
+}
+.orb-ring-3{
+  inset:24px;border-top-color:#7c3aed88;border-bottom-color:#a855f788;
+  
+}
+.orb-core{
+  position:absolute;inset:34px;border-radius:50%;
+  background:radial-gradient(circle,rgba(168,85,247,.6) 0%,rgba(124,58,237,.3) 50%,transparent 100%);
+  
+  box-shadow:0 0 20px rgba(168,85,247,.5);
+}
+.orb-dots{position:absolute;inset:0;}
+.orb-dot{
+  position:absolute;width:5px;height:5px;border-radius:50%;
+  background:#c084fc;box-shadow:0 0 8px #a855f7;
+  top:50%;left:50%;transform-origin:0 0;
+  
+}
+.orb-dot:nth-child(2){animation-delay:-0.66s;width:4px;height:4px;background:#7c3aed;}
+.orb-dot:nth-child(3){animation-delay:-1.33s;width:3px;height:3px;background:#c084fc;}
+@keyframes spin1{to{transform:rotate(360deg)}}
+@keyframes spin2{to{transform:rotate(-360deg)}}
+@keyframes core-pulse{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.1);opacity:1}}
+@keyframes dot-orbit{
+  0%{transform:translate(-50%,-50%) rotate(0deg) translateX(44px)}
+  100%{transform:translate(-50%,-50%) rotate(360deg) translateX(44px)}
+}
+
+/* ── SCAN LINE (futuristic feel) ── */
+.empty-scan{
+  position:absolute;left:10%;right:10%;height:1px;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(168,85,247,.6),rgba(192,132,252,.8),rgba(168,85,247,.6),transparent);
+  box-shadow:0 0 8px rgba(168,85,247,.5);
+  
+  opacity:0;
+}
+@keyframes scan{
+  0%{top:20%;opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{top:80%;opacity:0}
+}
+
+/* ── TEXT ── */
+.empty-title{
+  font-size:22px;font-weight:900;letter-spacing:-.02em;
+  color:#0d1928;text-align:center;line-height:1.3;
+  text-shadow:0 0 20px rgba(168,85,247,.6),0 0 40px rgba(168,85,247,.3);
+  margin-bottom:10px;
+}
+.empty-sub{
+  font-size:13px;font-weight:600;
+  color:rgba(80,20,160,.8);
+  text-align:center;line-height:1.7;
+  letter-spacing:.02em;
+}
+.empty-sub span{
+  display:inline-block;
+  border:1px solid rgba(168,85,247,.3);border-radius:99px;
+  padding:3px 12px;margin:3px 4px;
+  background:rgba(168,85,247,.07);
+  font-size:11px;color:rgba(192,132,252,.9);
+  box-shadow:0 0 6px rgba(168,85,247,.15);
+}
+.empty-e{display:none;}
+.empty-t{display:none;}
+
+
+/* ── HERO CARDS ──────────────────────────────────────── */
+.hero-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start;}
+.hero-col{display:flex;flex-direction:column;gap:10px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.hero-col{}
+.hero-col:nth-child(1){animation-delay:.05s}
+.hero-col:nth-child(2){animation-delay:.13s}
+.hero-col:nth-child(3){animation-delay:.21s}
+
+.hero-card{padding:22px 20px;}
+.hc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.hc-icon-wrap{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
+}
+.hc-badge{
+  font-size:9px;font-weight:800;padding:3px 9px;border-radius:99px;
+  letter-spacing:.05em;text-transform:uppercase;
+}
+.hc-val{
+  font-size:28px;font-weight:900;letter-spacing:-.025em;margin-bottom:4px;
+  transition:color .3s;
+}
+.hc-label{font-size:11px;font-weight:700;color:rgba(40,65,110,.7);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.hc-sub{font-size:12px;font-weight:700;}
+.hc-net{
+  margin-top:10px;padding:7px 10px;
+  background:rgba(0,30,100,.04);border:1px solid var(--bord);
+  border-radius:8px;font-size:10px;color:rgba(40,65,110,.7);font-weight:600;
+}
+.hc-strip{height:3px;border-radius:99px;margin-top:14px;}
+
+/* SUB CARDS */
+.sub-card{padding:18px;}
+.sc-title{
+  font-size:10px;font-weight:800;color:rgba(40,65,110,.65);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:13px;
+  display:flex;align-items:center;gap:6px;
+}
+.mini-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 11px;background:#f8fafd;
+  border-radius:9px;margin-bottom:5px;border:1px solid var(--bord);
+  transition:all .15s;cursor:default;
+}
+.mini-row:hover{background:var(--glass2);border-color:rgba(0,184,255,.18);box-shadow:0 0 8px rgba(0,184,255,.05);}
+.mini-lbl{font-size:11px;color:rgba(20,40,80,.75);font-weight:500;}
+.mini-v{font-size:13px;font-weight:800;}
+
+/* EXPENSE INPUTS */
+.ei-row{display:flex;align-items:center;margin-bottom:8px;gap:10px;}
+.ei-row label{font-size:12px;color:rgba(20,40,80,.85);flex:1;font-weight:600;}
+.ei-row input{
+  width:105px;padding:7px 10px;border-radius:9px;
+  border:1px solid var(--bord2);background:#f8fafd;
+  color:var(--text);font-size:13px;font-family:inherit;font-weight:700;
+  outline:none;text-align:left;direction:ltr;transition:all .18s;
+}
+.ei-row input:focus{border-color:rgba(0,184,255,.5);background:rgba(0,184,255,.06);box-shadow:0 0 0 2px rgba(0,184,255,.12);}
+.update-btn{
+  width:100%;padding:10px;border-radius:10px;
+  border:1px solid rgba(0,184,255,.35);
+  background:rgba(0,184,255,.08);
+  color:var(--blue);font-size:12px;font-weight:800;
+  cursor:pointer;font-family:inherit;margin-top:8px;transition:all .18s;
+}
+.update-btn:hover{background:linear-gradient(135deg,rgba(0,112,221,.3),rgba(0,184,255,.2));color:#fff;box-shadow:0 0 14px rgba(0,184,255,.2);}
+
+/* INDEX SUB */
+.idx-select{
+  width:100%;padding:10px 13px;border-radius:10px;
+  border:1px solid var(--bord2);background:#f8fafd;
+  color:var(--text);font-size:13px;font-family:inherit;font-weight:600;
+  outline:none;direction:rtl;-webkit-appearance:none;
+  margin-bottom:11px;cursor:pointer;transition:all .18s;
+}
+.idx-select:focus{border-color:rgba(255,176,32,.5);box-shadow:0 0 0 2px rgba(255,176,32,.12);}
+.period-row{display:flex;gap:5px;margin-bottom:11px;}
+.p-tab{
+  flex:1;padding:8px 0;border-radius:9px;
+  border:1px solid var(--bord2);background:#f8fafd;
+  color:rgba(40,65,110,.7);font-size:11px;font-weight:700;
+}
+.p-tab:hover{border-color:rgba(255,176,32,.4);color:var(--amber);}
+.p-tab.on{
+  background:linear-gradient(135deg,rgba(180,100,0,.3),rgba(255,176,32,.15));
+  border-color:var(--amber);color:var(--amber);
+  box-shadow:0 0 14px rgba(255,176,32,.2);
+}
+.ret-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.ret-cell{
+  background:#f8fafd;border-radius:10px;
+  padding:11px 12px;border:1px solid var(--bord);transition:all .18s;cursor:default;
+}
+.ret-cell:hover,.ret-cell.sel{background:rgba(255,176,32,.07);border-color:rgba(255,176,32,.3);box-shadow:0 0 8px rgba(255,176,32,.1);}
+.ret-p{font-size:10px;color:rgba(40,65,110,.65);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.ret-pct{font-size:17px;font-weight:900;}
+.ret-amt{font-size:10px;color:rgba(40,65,110,.7);margin-top:3px;font-weight:600;}
+
+/* SECTION CARDS */
+.sec-card{padding:24px;}
+.sec-head{
+  display:flex;align-items:center;gap:9px;margin-bottom:20px;
+}
+.sec-dot{width:4px;height:18px;border-radius:99px;flex-shrink:0;}
+.sec-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
+
+/* BARS */
+.bars-2{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;}
+.bar-r{margin-bottom:18px;}
+.bar-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.bar-lbl{font-size:12px;color:rgba(20,40,80,.85);font-weight:600;}
+.bar-v{font-size:12px;font-weight:800;}
+.bar-track{position:relative;height:8px;background:rgba(0,30,100,.07);border-radius:99px;border:1px solid rgba(0,30,100,.05);}
+.bar-fill{height:100%;border-radius:99px;transition:width 1s cubic-bezier(.4,0,.2,1);}
+.bar-avg{position:absolute;top:-5px;width:2px;height:18px;background:var(--amber);border-radius:2px;transform:translateX(-50%);box-shadow:0 0 8px var(--amber-glow);}
+.bar-note{font-size:10px;color:rgba(10,20,50,.55);margin-top:4px;font-weight:500;}
+.bar-legend{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--bord);}
+.bar-leg-dot{width:10px;height:10px;background:var(--amber);border-radius:2px;box-shadow:0 0 6px var(--amber-glow);}
+.bar-leg-t{font-size:10px;color:rgba(10,20,50,.65);font-weight:600;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* CHAINS */
+.chain-r{
+  display:flex;align-items:center;padding:10px 12px;
+  margin-bottom:5px;border-radius:11px;
+  border:1px solid var(--bord);background:#f8fafd;
+  transition:all .16s;cursor:default;
+}
+.chain-r:hover{background:var(--glass2);border-color:rgba(0,184,255,.18);box-shadow:0 0 10px rgba(0,184,255,.06);}
+.chain-r.cheapest{background:var(--green-dim);border-color:rgba(0,255,170,.2);box-shadow:0 0 10px rgba(0,255,170,.07);}
+.ch-num{width:20px;font-size:11px;color:rgba(60,90,140,.55);font-weight:700;flex-shrink:0;}
+.ch-name{flex:1;font-size:12px;font-weight:700;color:rgba(10,25,60,.9);}
+.ch-price{font-size:13px;font-weight:900;margin-left:8px;}
+.ch-diff{font-size:11px;font-weight:800;min-width:74px;text-align:left;}
+.save-banner{
+  margin-top:13px;padding:13px 15px;
+  background:linear-gradient(135deg,rgba(0,196,122,.1),rgba(0,255,170,.06));
+  border-radius:11px;border:1px solid rgba(0,255,170,.2);
+  font-size:12px;color:var(--green);font-weight:800;
+  box-shadow:0 0 16px rgba(0,255,170,.05);
+}
+
+/* INVEST */
+.inv-r{
+  display:flex;align-items:center;padding:11px 13px;
+  margin-bottom:7px;border-radius:11px;
+  border:1px solid var(--bord);background:#f8fafd;
+  transition:all .16s;cursor:default;
+}
+.inv-r:hover{background:var(--glass2);border-color:rgba(255,176,32,.2);box-shadow:0 0 10px rgba(255,176,32,.07);}
+.inv-r.top{background:var(--amber-dim);border-color:rgba(255,176,32,.25);box-shadow:0 0 12px rgba(255,176,32,.08);}
+.inv-ic{font-size:18px;margin-left:10px;flex-shrink:0;}
+.inv-name{flex:1;font-size:12px;font-weight:700;color:rgba(10,25,60,.9);}
+.inv-gain{font-size:14px;font-weight:900;}
+.inv-rate{font-size:10px;color:rgba(40,65,110,.65);font-weight:600;}
+
+/* VERDICT */
+#verdict{
+  background:linear-gradient(135deg,rgba(0,112,221,.06),rgba(0,184,255,.03));
+  border:1px solid rgba(0,184,255,.25);border-radius:20px;
+  padding:24px 28px;display:flex;gap:22px;align-items:center;
+  box-shadow:0 0 24px rgba(0,120,255,.06),0 2px 16px rgba(0,30,100,.08);
+  position:relative;overflow:hidden;
+}
+#verdict::before{
+  content:'';position:absolute;top:-50px;left:50%;transform:translateX(-50%);
+  width:300px;height:200px;
+  background:radial-gradient(ellipse,rgba(0,184,255,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.v-text h3{font-size:18px;font-weight:900;margin-bottom:8px;}
+.v-text p{font-size:13px;color:rgba(20,40,80,.85);line-height:1.9;max-width:480px;font-weight:500;}
+.g-txt{font-size:16px;font-weight:900;font-family:'Heebo',sans-serif;}
+
+/* NEON TEXT HELPERS */
+.neon-blue{color:var(--blue);}
+.neon-green{color:var(--green2);}
+.neon-amber{color:var(--amber);}
+.neon-red{color:var(--red);}
+
+select option{background:#f8fafd;color:var(--text);}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
+
+/* ══ FOOTER ══════════════════════════════════════════════ */
+#site-footer{
+  background:linear-gradient(180deg,#ffffff 0%,#f8fafd 100%);
+  border-top:2px solid transparent;
+  border-image:linear-gradient(90deg,rgba(102,126,234,.3),rgba(246,147,251,.3)) 1;
+  padding:36px 40px 0;margin-top:32px;
+  font-family:'Heebo',sans-serif;direction:rtl;
+}
+.footer-inner{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;
+  max-width:1200px;margin:0 auto;padding-bottom:28px;
+  border-bottom:1px solid rgba(0,30,100,.09);
+}
+.footer-brand{}
+.footer-logo{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.footer-logo-name{font-size:18px;font-weight:900;color:#0d1928;}
+.footer-tagline{font-size:12px;color:rgba(10,20,50,.55);font-weight:500;margin-bottom:14px;}
+.footer-contact{font-size:12px;color:rgba(10,20,50,.65);line-height:2.2;font-weight:600;}
+.footer-contact a{color:var(--blue);text-decoration:none;font-weight:700;}
+.footer-col-title{font-size:11px;font-weight:800;color:rgba(10,20,50,.45);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;}
+.footer-links-group{display:flex;flex-direction:column;gap:2px;}
+.footer-link{
+  background:none;border:none;padding:5px 0;text-align:right;
+  font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;
+  color:rgba(10,20,50,.75);cursor:pointer;text-decoration:none;
+  display:block;transition:color .15s;
+}
+.footer-link:hover{
+  color:var(--blue);
+  transform:translateX(3px);
+  text-shadow:0 0 10px rgba(0,120,255,.3);
+}
+.footer-bottom{
+  max-width:1200px;margin:0 auto;
+  padding:14px 0;display:flex;align-items:center;gap:12px;
+  font-size:11px;color:rgba(10,20,50,.45);font-weight:600;
+}
+.footer-sep{color:rgba(10,20,50,.25);}
+
+/* ══ MODALS ══════════════════════════════════════════════ */
+#modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:900;backdrop-filter:blur(4px);
+}
+#modal-overlay.open{display:block;}
+.site-modal{
+  display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  z-index:901;width:min(680px,92vw);max-height:82vh;overflow-y:auto;
+  background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.2);
+  direction:rtl;font-family:'Heebo',sans-serif;
+}
+.site-modal.open{display:block;}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px 16px;border-bottom:1px solid rgba(0,30,100,.1);
+  position:sticky;top:0;background:#fff;z-index:1;border-radius:20px 20px 0 0;
+}
+.modal-title{font-size:18px;font-weight:900;color:#0d1928;margin:0;}
+.modal-close{
+  width:32px;height:32px;border-radius:50%;border:1px solid rgba(0,30,100,.12);
+  background:#f4f6fb;font-size:14px;cursor:pointer;font-weight:700;
+  color:rgba(10,20,50,.6);display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.modal-close:hover{background:#e8eef8;}
+.modal-body{padding:20px 24px 28px;}
+.modal-meta{font-size:11px;color:rgba(10,20,50,.4);font-weight:600;margin-bottom:18px;padding:8px 12px;background:#f4f6fb;border-radius:8px;}
+.modal-section-title{font-size:13px;font-weight:900;color:#0d1928;margin:18px 0 6px;border-right:3px solid var(--blue);padding-right:10px;}
+.modal-p{font-size:13px;color:rgba(10,20,50,.8);line-height:1.9;font-weight:500;margin:0 0 8px;}
+.modal-list{font-size:13px;color:rgba(10,20,50,.8);line-height:2.1;font-weight:500;padding-right:18px;margin:0 0 8px;}
+.modal-contact-box{padding:12px 16px;background:#f4f6fb;border:1px solid rgba(0,30,100,.1);border-radius:10px;font-size:13px;color:rgba(10,20,50,.8);line-height:2.2;font-weight:600;margin:10px 0;}
+/* sitemap grid */
+.sitemap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sitemap-item{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;background:#f8fafd;border:1px solid rgba(0,30,100,.08);border-radius:10px;}
+.sitemap-ic{font-size:22px;flex-shrink:0;}
+.sitemap-name{font-size:13px;font-weight:800;color:#0d1928;margin-bottom:2px;}
+.sitemap-desc{font-size:11px;color:rgba(10,20,50,.55);font-weight:500;line-height:1.5;}
+
+/* ══ EXPENSE CATEGORIES ══════════════════════════════════ */
+.exp-cat{
+  margin-bottom:10px;border-radius:14px;overflow:hidden;
+  border:1px solid rgba(0,30,100,.08);background:#fff;
+}
+.exp-cat-head{
+  display:flex;align-items:center;gap:12px;padding:14px 18px;
+  cursor:pointer;user-select:none;
+  background:linear-gradient(135deg,rgba(102,126,234,.08),rgba(246,147,251,.04));
+  border-bottom:2px solid rgba(102,126,234,.15);
+  transition:all .3s ease;
+  border-radius:14px 14px 0 0;
+}
+.exp-cat-head:hover{
+  background:linear-gradient(135deg,rgba(102,126,234,.15),rgba(246,147,251,.08));
+  transform:translateX(4px);
+  border-bottom-color:rgba(102,126,234,.25);
+}
+
+.exp-cat-title{
+  position:relative;
+}
+
+.exp-cat-head:hover 
+.exp-cat-title{font-size:14px;font-weight:900;color:#0d1928;flex:1;}
+.exp-cat-count{
+  font-size:10px;padding:3px 10px;border-radius:99px;
+  background:rgba(0,120,255,.08);color:var(--blue);
+  font-weight:800;border:1px solid rgba(0,120,255,.15);
+}
+.exp-arrow{font-size:11px;color:rgba(10,20,50,.35);transition:transform .2s;}
+.exp-cat.open .exp-arrow{transform:rotate(180deg);}
+.exp-cat-body{display:none;padding:4px 12px 12px;}
+.exp-cat.open .exp-cat-body{display:block;}
+.exp-row{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+  padding:12px 14px;border-radius:10px;
+  border:1px solid rgba(0,30,100,.08);
+  background:linear-gradient(135deg,#ffffff,#f8fafd);
+  margin-bottom:6px;
+  transition:all .25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.exp-row:hover{
+  background:linear-gradient(135deg,#fff,rgba(102,126,234,.05));
+  border-color:rgba(102,126,234,.25);
+  transform:translateX(6px) translateY(-2px);
+  box-shadow:0 4px 20px rgba(102,126,234,.12), -2px 0 15px rgba(118,75,162,.08);
+}
+.exp-name{flex:1;font-size:12px;color:rgba(10,20,50,.9);font-weight:700;line-height:1.5;}
+.exp-doc{font-size:10px;color:rgba(10,20,50,.5);margin-top:3px;font-weight:500;}
+.exp-note{font-size:10px;color:var(--amber);margin-top:2px;font-weight:600;}
+.exp-pct{font-size:13px;font-weight:900;white-space:nowrap;flex-shrink:0;padding-top:1px;}
+
+/* ── WhatsApp CTA button ─────────────────────────────────── */
+.wa-btn{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 14px;margin-bottom:10px;border-radius:14px;
+  border:1.5px solid #25D366;
+  background:rgba(37,211,102,.07);
+  box-shadow:0 0 16px rgba(37,211,102,.25),0 0 32px rgba(37,211,102,.1);
+  cursor:pointer;text-decoration:none;
+  transition:box-shadow .2s,background .2s;
+  
+}
+.wa-btn:hover{
+  background:rgba(37,211,102,.14);
+  box-shadow:0 0 26px rgba(37,211,102,.45),0 0 48px rgba(37,211,102,.18);
+}
+.wa-ic{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+@keyframes wa-pulse{
+  0%,100%{box-shadow:0 0 16px rgba(37,211,102,.25),0 0 32px rgba(37,211,102,.1);}
+  50%{box-shadow:0 0 24px rgba(37,211,102,.45),0 0 48px rgba(37,211,102,.2);}
+}
+
+
+</style>
+</head>
+<body>
+<div id="bg-grid"></div>
+
+<!-- HEADER -->
+<!-- NEWS TICKER -->
+<div id="ticker-wrap">
+  <div class="ticker-badge">
+    <div class="tb-dot"></div>
+    <span>עדכונים</span>
+  </div>
+  <div class="ticker-track">
+    <div class="ticker-inner" id="tickerInner"><!-- filled by JS --></div>
+  </div>
+</div>
+
+<header id="header">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <!-- Shield -->
+        <path d="M11 2 L19 5.5 V11 C19 15.5 15.5 19 11 20.5 C6.5 19 3 15.5 3 11 V5.5 Z" fill="none" stroke="#ffe033" stroke-width="1.8" stroke-linejoin="round" style="filter:drop-shadow(0 0 5px rgba(255,224,51,.8))"/>
+        <!-- ₪ inside -->
+        <text x="11" y="14.5" font-size="9" fill="#ffe033" font-family="Heebo" text-anchor="middle" font-weight="900" style="filter:drop-shadow(0 0 4px rgba(255,224,51,.9))">₪</text>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-name">מגן כסף</div>
+      <div class="logo-tag">נתונים עדכניים 2026</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date-chip" id="dateChip">—</div>
+    <div class="date-chip" id="clockChip" style="font-variant-numeric:tabular-nums;letter-spacing:.04em">00:00:00</div>
+    <div class="live-pill"><div class="pulse"></div>נתוני ישראל 2025</div>
+  </div>
+</header>
+
+<div id="layout">
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sb-label">הכלים הפיננסיים</div>
+
+    <!-- WhatsApp CTA -->
+    <a href="https://chat.whatsapp.com/" target="_blank" class="wa-btn">
+      <div class="wa-ic">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M11 2C6.03 2 2 6.03 2 11c0 1.6.41 3.1 1.13 4.4L2 20l4.72-1.11A9 9 0 1011 2z" fill="#25D366"/>
+          <path d="M15.5 13.2c-.25-.12-1.47-.72-1.7-.8-.23-.08-.4-.12-.56.12-.17.25-.64.8-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.14-.25-.02-.38.1-.5.12-.12.25-.29.37-.44.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43H7.6c-.15 0-.4.06-.6.29-.21.23-.8.78-.8 1.9s.82 2.2.93 2.35c.12.15 1.6 2.45 3.88 3.43.54.23.96.37 1.29.48.54.17 1.03.15 1.42.09.43-.07 1.33-.54 1.52-1.07.19-.52.19-.97.13-1.07-.06-.1-.22-.16-.47-.28z" fill="white"/>
+        </svg>
+      </div>
+      <div style="flex:1">
+        <div class="nav-name" style="color:#111">לקבוצת העדכונים השוטפים</div>
+        <div class="nav-name" style="color:#111">ב-WhatsApp</div>
+      </div>
+      <span style="font-size:14px">←</span>
+    </a>
+
+    <!-- מדד החיים -->
+    <button class="nav-item on" onclick="navTo('medad')">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bar chart with pulse line -->
+          <rect x="2" y="14" width="4" height="9" rx="1.2" class="ico-fill" opacity=".9"/>
+          <rect x="8" y="9" width="4" height="14" rx="1.2" class="ico-fill" opacity=".9"/>
+          <rect x="14" y="5" width="4" height="18" rx="1.2" class="ico-fill" opacity=".9"/>
+          <rect x="20" y="11" width="4" height="12" rx="1.2" class="ico-fill" opacity=".9"/>
+          <!-- trend arrow top right -->
+          <polyline points="2,16 7,10 12,13 18,5 24,3" class="ico-stroke" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <polyline points="20,3 24,3 24,7" class="ico-stroke" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">מדד החיים</div><div class="nav-hint">ניתוח הוצאות אישי</div></div>
+      <span class="nav-chip">חדש</span>
+    </button>
+
+    <!-- עגלת הסופר -->
+    <button class="nav-item">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Cart body -->
+          <path d="M3 3h3l2.5 12.5A2 2 0 007.5 17h11a2 2 0 001.95-1.55L22 8H7" class="ico-stroke" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Wheels -->
+          <circle cx="10" cy="21.5" r="1.5" class="ico-fill"/>
+          <circle cx="18" cy="21.5" r="1.5" class="ico-fill"/>
+          <!-- price tag -->
+          <path d="M16 11v-2a1 1 0 00-1-1h-2a1 1 0 00-1 1v2" class="ico-stroke" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">עגלת הסופר</div><div class="nav-hint">השוואת מחירים</div></div>
+    </button>
+
+    <!-- מסלולי השקעה -->
+    <button class="nav-item">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Candlestick chart -->
+          <line x1="5" y1="4" x2="5" y2="8" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="3" y="8" width="4" height="7" rx="1" class="ico-fill" opacity=".9"/>
+          <line x1="5" y1="15" x2="5" y2="19" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+
+          <line x1="13" y1="3" x2="13" y2="7" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="11" y="7" width="4" height="9" rx="1" class="ico-fill" opacity=".9"/>
+          <line x1="13" y1="16" x2="13" y2="20" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+
+          <line x1="21" y1="5" x2="21" y2="9" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="19" y="9" width="4" height="6" rx="1" class="ico-fill" opacity=".9"/>
+          <line x1="21" y1="15" x2="21" y2="18" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- baseline -->
+          <line x1="2" y1="23" x2="24" y2="23" class="ico-stroke" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+          <!-- upward arrow -->
+          <polyline points="2,21 8,16 14,18 22,9" class="ico-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".7"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">מסלולי השקעה</div><div class="nav-hint">תשואות ומדדים</div></div>
+    </button>
+
+    <!-- מחשבון חיסכון -->
+    <button class="nav-item">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Piggy bank body -->
+          <ellipse cx="13" cy="15" rx="8" ry="7" class="ico-stroke" stroke-width="1.8"/>
+          <!-- ear -->
+          <path d="M18 10 Q21 7 20 5 Q18 4 17 7" class="ico-stroke" stroke-width="1.6" stroke-linejoin="round"/>
+          <!-- eye -->
+          <circle cx="16" cy="13" r="1" class="ico-fill"/>
+          <!-- coin slot -->
+          <line x1="11" y1="8" x2="15" y2="8" class="ico-stroke" stroke-width="2" stroke-linecap="round"/>
+          <!-- legs -->
+          <line x1="9" y1="21" x2="8" y2="24" class="ico-stroke" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="12" y1="22" x2="12" y2="24" class="ico-stroke" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="15" y1="22" x2="15" y2="24" class="ico-stroke" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="18" y1="21" x2="19" y2="24" class="ico-stroke" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- coin floating -->
+          <circle cx="5" cy="9" r="2.5" class="ico-stroke" stroke-width="1.5"/>
+          <text x="4" y="10" font-size="3.5" class="ico-fill" font-family="Heebo" text-anchor="middle">₪</text>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">מחשבון חיסכון</div><div class="nav-hint">יעדים פיננסיים</div></div>
+    </button>
+
+    <!-- עצמאיים -->
+    <button class="nav-item" onclick="navTo('atzmai')">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <!-- person at desk -->
+          <circle cx="13" cy="6" r="3" class="ico-stroke" stroke-width="1.7"/>
+          <path d="M7 22 C7 16 19 16 19 22" class="ico-stroke" stroke-width="1.7" stroke-linecap="round"/>
+          <!-- laptop -->
+          <rect x="7" y="13" width="12" height="7" rx="1.5" class="ico-stroke" stroke-width="1.5"/>
+          <line x1="5" y1="20" x2="21" y2="20" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- ₪ on screen -->
+          <text x="13" y="18.5" font-size="4" class="ico-fill" font-family="Heebo" text-anchor="middle" font-weight="900">₪</text>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">עצמאיים</div><div class="nav-hint">מס, הוצאות מוכרות</div></div>
+      <span class="nav-chip">חדש</span>
+    </button>
+
+    <!-- שכירים -->
+    <button class="nav-item" onclick="navTo('sachir')">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <!-- person -->
+          <circle cx="13" cy="6" r="3" class="ico-stroke" stroke-width="1.7"/>
+          <path d="M7 22 C7 16 19 16 19 22" class="ico-stroke" stroke-width="1.7" stroke-linecap="round"/>
+          <!-- tie -->
+          <path d="M12 11 L11 14 L13 15.5 L15 14 L14 11 Z" class="ico-fill" opacity=".7"/>
+          <!-- briefcase -->
+          <rect x="8" y="14" width="10" height="7" rx="1.5" class="ico-stroke" stroke-width="1.5"/>
+          <path d="M10 14 L10 12.5 Q10 11.5 11.5 11.5 L14.5 11.5 Q16 11.5 16 12.5 L16 14" class="ico-stroke" stroke-width="1.5"/>
+          <line x1="8" y1="17" x2="18" y2="17" class="ico-stroke" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">שכירים</div><div class="nav-hint">תלוש, זכויות, החזרי מס</div></div>
+      <span class="nav-chip">חדש</span>
+    </button>
+
+    <!-- קופונים מתעדכנים -->
+    <button class="nav-item" onclick="navTo('coupons')">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <!-- coupon ticket -->
+          <rect x="3" y="8" width="20" height="10" rx="2" class="ico-stroke" stroke-width="1.6"/>
+          <!-- perforated edge circles -->
+          <circle cx="3" cy="13" r="1.5" fill="var(--bg)" stroke="none"/>
+          <circle cx="23" cy="13" r="1.5" fill="var(--bg)" stroke="none"/>
+          <!-- dashed line -->
+          <line x1="13" y1="9" x2="13" y2="17" stroke-dasharray="1.5 1.5" class="ico-stroke" stroke-width="1.2"/>
+          <!-- % symbol -->
+          <circle cx="8" cy="11" r="1" class="ico-fill"/>
+          <circle cx="18" cy="15" r="1" class="ico-fill"/>
+          <line x1="9" y1="16" x2="17" y2="10" class="ico-stroke" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">קופונים מתעדכנים</div><div class="nav-hint">הנחות מעודכנות יום יום</div></div>
+      <span class="nav-chip">חדש</span>
+    </button>
+
+    <!-- ביטוחים ורכב -->
+    <button class="nav-item" onclick="navTo('bituchim')">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <!-- shield -->
+          <path d="M13 3 L20 6 L20 12 C20 16 16 20 13 22 C10 20 6 16 6 12 L6 6 Z" class="ico-stroke" stroke-width="1.6"/>
+          <!-- checkmark in shield -->
+          <path d="M10 12 L12 14 L16 9" class="ico-stroke" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- car silhouette -->
+          <ellipse cx="9" cy="19" rx="1.5" ry="1" class="ico-fill"/>
+          <ellipse cx="17" cy="19" rx="1.5" ry="1" class="ico-fill"/>
+          <path d="M7.5 19 L7 17 L8 15 L18 15 L19 17 L18.5 19" class="ico-stroke" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">ביטוחים ורכב</div><div class="nav-hint">השוואת מחירים וחיסכון</div></div>
+      <span class="nav-chip">חדש</span>
+    </button>
+
+    <!-- משכנתא ודיור -->
+    <button class="nav-item" onclick="navTo('mashkanta')">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <!-- house -->
+          <path d="M4 13 L13 4 L22 13 L22 22 L16 22 L16 16 L10 16 L10 22 L4 22 Z" class="ico-stroke" stroke-width="1.6" stroke-linejoin="round"/>
+          <!-- door -->
+          <rect x="11" y="17" width="4" height="5" class="ico-fill" opacity=".6"/>
+          <!-- percentage symbol for mortgage -->
+          <circle cx="8" cy="9" r="1" class="ico-fill"/>
+          <circle cx="18" cy="19" r="1" class="ico-fill"/>
+          <line x1="9" y1="20" x2="17" y2="8" class="ico-stroke" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">משכנתא ודיור</div><div class="nav-hint">מחשבונים, ריביות, טיפים</div></div>
+      <span class="nav-chip">חדש</span>
+    </button>
+
+    <!-- זכויות רפואיות -->
+    <button class="nav-item" onclick="navTo('zkuyot')">
+      <div class="nav-ic">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <!-- medical cross -->
+          <rect x="11" y="4" width="4" height="18" rx="1" class="ico-fill"/>
+          <rect x="4" y="11" width="18" height="4" rx="1" class="ico-fill"/>
+          <!-- heart symbol -->
+          <path d="M13 20 C13 20, 6 15, 6 10 C6 7, 8 6, 10 7 C11 8, 12 9, 13 10 C14 9, 15 8, 16 7 C18 6, 20 7, 20 10 C20 15, 13 20, 13 20 Z" class="ico-stroke" stroke-width="1.3" opacity=".5"/>
+        </svg>
+      </div>
+      <div style="flex:1"><div class="nav-name">זכויות רפואיות</div><div class="nav-hint">סל בריאות, ביטוחים, זכויות</div></div>
+      <span class="nav-chip">חדש</span>
+    </button>
+
+    <div class="sb-footer">מקורות:<br>בנק ישראל · הלמ"ס<br>data.gov.il</div>
+  </nav>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div id="page-medad">
+    <!-- ══ PAGE: מדד החיים ══ -->
+    <div class="page-head">
+      <div class="page-title-row">
+        <div class="page-ic">
+          <svg width="28" height="28" viewBox="0 0 26 26" fill="none">
+            <rect x="2" y="14" width="4" height="9" rx="1.2" fill="#b8860b" opacity="1"/>
+            <rect x="8" y="9" width="4" height="14" rx="1.2" fill="#b8860b" opacity="1"/>
+            <rect x="14" y="5" width="4" height="18" rx="1.2" fill="#b8860b" opacity="1"/>
+            <rect x="20" y="11" width="4" height="12" rx="1.2" fill="#b8860b" opacity="1"/>
+            <polyline points="2,16 7,10 12,13 18,5 24,3" stroke="#b8860b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <polyline points="20,3 24,3 24,7" stroke="#b8860b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <div class="page-title">מדד החיים האמיתיים</div>
+          <div class="page-sub">כמה החיים עולים לך — ואיפה הכסף נעלם?</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="layout-2">
+      <!-- INPUT -->
+      <div class="gcard neon-blue input-card">
+        <div class="ic-head">הכנס את הנתונים שלך</div>
+        <div class="field">
+          <label class="fl">הכנסה משפחתית ברוטו (₪)</label>
+          <input type="number" id="salary" placeholder="18,000"/>
+        </div>
+        <div class="field">
+          <label class="fl">עיר מגורים</label>
+          <select id="city">
+            <option value="">— בחר עיר / ישוב —</option>
+            <optgroup label="5 הערים הגדולות">
+              <option>ירושלים</option><option>תל אביב</option><option>חיפה</option>
+              <option>ראשון לציון</option><option>פתח תקווה</option>
+            </optgroup>
+            <optgroup label="א–ת">
+              <option>אבו גוש</option><option>אום אל-פחם</option><option>אופקים</option>
+              <option>אור יהודה</option><option>אילת</option><option>אלעד</option>
+              <option>אלפי מנשה</option><option>אריאל</option><option>אשדוד</option>
+              <option>אשקלון</option><option>אזור</option><option>באר שבע</option>
+              <option>באקה אל-גרביה</option><option>בית שמש</option><option>ביתר עילית</option>
+              <option>בנימינה</option><option>בני ברק</option><option>בת ים</option>
+              <option>גבעת זאב</option><option>גבעת שמואל</option><option>גבעתיים</option>
+              <option>גדרה</option><option>גן יבנה</option><option>גוש עציון</option>
+              <option>דימונה</option><option>הוד השרון</option><option>הר אדר</option>
+              <option>הרצליה</option><option>חדרה</option><option>חולון</option>
+              <option>טבריה</option><option>טייבה</option><option>טירה</option>
+              <option>טירת כרמל</option><option>טמרה</option><option>יבנה</option>
+              <option>יהוד</option><option>יקנעם</option><option>ירוחם</option>
+              <option>כפר סבא</option><option>כפר ורדים</option><option>כפר יונה</option>
+              <option>כרמיאל</option><option>לוד</option><option>מבשרת ציון</option>
+              <option>מגדל</option><option>מגדל העמק</option><option>מודיעין</option>
+              <option>מעלה אדומים</option><option>מעלה אפרים</option><option>מעלות תרשיחא</option>
+              <option>מצפה רמון</option><option>נהריה</option><option>נס ציונה</option>
+              <option>נצרת</option><option>נצרת עילית (נוף הגליל)</option><option>נשר</option>
+              <option>נתיבות</option><option>נתניה</option><option>סח'נין</option>
+              <option>עכו</option><option>עפולה</option><option>ערד</option>
+              <option>פרדס חנה-כרכור</option><option>צפת</option><option>קדימה-צורן</option>
+              <option>קצרין</option><option>קריית אונו</option><option>קריית אתא</option>
+              <option>קריית ביאליק</option><option>קריית גת</option><option>קריית טבעון</option>
+              <option>קריית מוצקין</option><option>קריית מלאכי</option><option>קריית שמונה</option>
+              <option>קריית ים</option><option>קרית יערים</option><option>ראש העין</option>
+              <option>ראש פינה</option><option>רהט</option><option>רחובות</option>
+              <option>רכסים</option><option>רמלה</option><option>רמת גן</option>
+              <option>רמת השרון</option><option>רעננה</option><option>שדרות</option>
+              <option>שפרעם</option><option>תל שבע</option><option>זכרון יעקב</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label class="fl">מספר ילדים</label>
+          <div class="kids-row">
+            <button class="kid-btn on" data-val="0" onclick="pickKids(this)">0</button>
+            <button class="kid-btn" data-val="1" onclick="pickKids(this)">1</button>
+            <button class="kid-btn" data-val="2" onclick="pickKids(this)">2</button>
+            <button class="kid-btn" data-val="3" onclick="pickKids(this)">3</button>
+            <button class="kid-btn" data-val="4" onclick="pickKids(this)">4</button>
+            <button class="kid-btn" data-val="5" onclick="pickKids(this)">5+</button>
+          </div>
+        </div>
+        <button class="go-btn" onclick="compute()">⚡ חשב את המצב הפיננסי שלי</button>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results-area">
+        <!-- empty state -->
+        <div class="empty-state">
+          <div class="empty-orb">
+            <div class="orb-ring r1"></div>
+            <div class="orb-ring r2"></div>
+            <div class="orb-ring r3"></div>
+            <div class="orb-core"></div>
+            <div class="orb-dot d1"></div>
+            <div class="orb-dot d2"></div>
+            <div class="orb-dot d3"></div>
+            <div class="orb-scan"></div>
+          </div>
+          <div class="empty-title">ממתין לנתונים</div>
+          <div class="empty-sub">הכנס הכנסה ועיר מגורים כדי לראות את הניתוח המלא</div>
+          <div class="empty-e"></div>
+          <div class="empty-t"></div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /page-medad -->
+
+  <!-- ══ PAGE: עצמאיים ══ -->
+  <div id="page-atzmai" style="display:none;padding:0 40px 40px">
+    <div class="page-head">
+      <div class="page-title-row">
+        <div class="page-ic" style="background:linear-gradient(135deg,rgba(0,255,170,.18),rgba(0,196,122,.08));border-color:rgba(0,255,170,.35);box-shadow:0 0 24px rgba(0,255,170,.18)">
+          <svg width="28" height="28" viewBox="0 0 26 26" fill="none">
+            <circle cx="13" cy="6" r="3" stroke="#00ffaa" stroke-width="1.7" fill="none"/>
+            <path d="M7 22 C7 16 19 16 19 22" stroke="#00ffaa" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+            <rect x="7" y="13" width="12" height="7" rx="1.5" stroke="#00ffaa" stroke-width="1.5" fill="none"/>
+            <line x1="5" y1="20" x2="21" y2="20" stroke="#00ffaa" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="13" y="18.5" font-size="4" fill="#00ffaa" font-family="Heebo" text-anchor="middle" font-weight="900">₪</text>
+          </svg>
+        </div>
+        <div>
+          <div class="page-title">מדריך ההוצאות המוכרות לעצמאיים</div>
+          <div class="page-sub">כל הוצאה, אחוז הכרה, ואיזה מסמך לשמור — ברשימה מלאה ומסודרת</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <!-- טיפים חשובים -->
+    <div class="gcard" style="margin-bottom:20px;border-color:rgba(255,176,32,.3);background:rgba(255,176,32,.04)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,176,32,.15);border:1px solid rgba(255,176,32,.35);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">💡</div>
+        <div>
+          <div style="font-size:16px;font-weight:900;color:var(--amber)">טיפים חשובים לפני שמתחילים</div>
+          <div style="font-size:12px;color:rgba(10,20,50,.6);margin-top:2px">מסמכים, טפסים ומידע שכדאי לדעת</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div style="padding:12px 14px;background:#f8fafd;border:1px solid rgba(0,30,100,.1);border-radius:11px">
+          <div style="font-size:13px;font-weight:800;color:#0d1928;margin-bottom:6px">📋 טופס 867</div>
+          <div style="font-size:12px;color:rgba(10,20,50,.7);line-height:1.8">דוח רווח והפסד מהשקעות — מהבנק/חברת ניהול. חובה לצרף לדוח השנתי אם יש השקעות.</div>
+        </div>
+        <div style="padding:12px 14px;background:#f8fafd;border:1px solid rgba(0,30,100,.1);border-radius:11px">
+          <div style="font-size:13px;font-weight:800;color:#0d1928;margin-bottom:6px">🏦 דוח ריבית משכנתא</div>
+          <div style="font-size:12px;color:rgba(10,20,50,.7);line-height:1.8">מהבנק — 25% מהריבית מוכרת למשרד בית. זמין אפריל-מאי של השנה החולפת.</div>
+        </div>
+        <div style="padding:12px 14px;background:#f8fafd;border:1px solid rgba(0,30,100,.1);border-radius:11px">
+          <div style="font-size:13px;font-weight:800;color:#0d1928;margin-bottom:6px">🎓 דוח קרן השתלמות</div>
+          <div style="font-size:12px;color:rgba(10,20,50,.7);line-height:1.8">אישור הפקדות שנתי מהחברה המנהלת. עד התקרה המוכרת.</div>
+        </div>
+        <div style="padding:12px 14px;background:#f8fafd;border:1px solid rgba(0,30,100,.1);border-radius:11px">
+          <div style="font-size:13px;font-weight:800;color:#0d1928;margin-bottom:6px">👴 דוח פנסיה</div>
+          <div style="font-size:12px;color:rgba(10,20,50,.7);line-height:1.8">דוח שנתי מהחברה או הסוכן. ניכוי עד התקרה החוקית.</div>
+        </div>
+        <div style="padding:12px 14px;background:#f8fafd;border:1px solid rgba(0,30,100,.1);border-radius:11px">
+          <div style="font-size:13px;font-weight:800;color:#0d1928;margin-bottom:6px">🚗 דוח רכב</div>
+          <div style="font-size:12px;color:rgba(10,20,50,.7);line-height:1.8">יומן נסיעות — תיעוד קילומטרז' עסקי/פרטי. חיוני לאישור 66% ניכוי.</div>
+        </div>
+        <div style="padding:12px 14px;background:#f8fafd;border:1px solid rgba(0,30,100,.1);border-radius:11px">
+          <div style="font-size:13px;font-weight:800;color:#0d1928;margin-bottom:6px">📁 שמירת חשבוניות</div>
+          <div style="font-size:12px;color:rgba(10,20,50,.7);line-height:1.8">7 שנים אחורה — דיגיטלי או פיזי. חובה על פי חוק.</div>
+        </div>
+      </div>
+
+      <div style="padding:14px 16px;background:rgba(0,255,170,.06);border:1px solid rgba(0,255,170,.18);border-radius:12px;margin-bottom:10px">
+        <div style="font-size:13px;color:rgba(10,20,50,.85);line-height:1.9;font-weight:600">
+          📋 <strong style="color:var(--green)">הדוח השנתי</strong> הוא המקום למקסם הוצאות <strong>ללא מע"מ</strong> — טיסות לחו"ל, מלונות, ציוד באילת, קרנות, פנסיה, השקעות. ההוצאות האלה <strong style="color:var(--red)">לא מקטינות את המע"מ החודשי</strong> אבל <strong style="color:var(--green)">כן מקטינות מס הכנסה וביטוח לאומי</strong>.
+        </div>
+      </div>
+
+      <div style="padding:14px 16px;background:rgba(0,184,255,.06);border:1px solid rgba(0,184,255,.18);border-radius:12px">
+        <div style="font-size:13px;font-weight:800;color:var(--blue);margin-bottom:8px">⏱️ כמה זמן עד החזר מס?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div style="text-align:center;padding:10px;background:rgba(0,255,170,.07);border:1px solid rgba(0,255,170,.2);border-radius:9px">
+            <div style="font-size:20px;font-weight:900;color:var(--green)">1–2</div>
+            <div style="font-size:11px;color:rgba(10,20,50,.7);font-weight:700;margin-top:2px">חודשים</div>
+            <div style="font-size:10px;color:rgba(10,20,50,.5)">מקרה פשוט</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:rgba(255,176,32,.07);border:1px solid rgba(255,176,32,.2);border-radius:9px">
+            <div style="font-size:20px;font-weight:900;color:var(--amber)">3–6</div>
+            <div style="font-size:11px;color:rgba(10,20,50,.7);font-weight:700;margin-top:2px">חודשים</div>
+            <div style="font-size:10px;color:rgba(10,20,50,.5)">בדרך כלל</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:rgba(255,59,92,.07);border:1px solid rgba(255,59,92,.2);border-radius:9px">
+            <div style="font-size:20px;font-weight:900;color:var(--red)">עד שנה</div>
+            <div style="font-size:11px;color:rgba(10,20,50,.7);font-weight:700;margin-top:2px"> </div>
+            <div style="font-size:10px;color:rgba(10,20,50,.5)">מורכב</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- רשימת הוצאות -->
+    <div style="font-size:14px;font-weight:900;color:#0d1928;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid rgba(0,30,100,.1)">📊 רשימת ההוצאות המוכרות המלאה</div>
+
+    <!-- משרד מהבית -->
+    <div class="exp-cat">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">🏠</span>
+        <span class="exp-cat-title">משרד מהבית ודירת מגורים</span>
+        <span class="exp-cat-count">5 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">שכר דירה — חלק יחסי למשרד<div class="exp-doc">📄 חוזה שכירות וקבלות</div><div class="exp-note">💡 לפי שטח המשרד מתוך הדירה</div></div><div class="exp-pct" style="color:var(--amber)">25%</div></div>
+        <div class="exp-row"><div class="exp-name">משכנתא — ריבית בלבד<div class="exp-doc">📄 דוח שנתי מהבנק</div><div class="exp-note">💡 25% מהריבית בלבד — לא מהקרן. עשרות אלפי ש"ח בשנה!</div></div><div class="exp-pct" style="color:var(--amber)">25%</div></div>
+        <div class="exp-row"><div class="exp-name">ארנונה — חלק יחסי למשרד<div class="exp-doc">📄 חשבונית מהעירייה</div><div class="exp-note">💡 חלק יחסי לפי שטח המשרד</div></div><div class="exp-pct" style="color:var(--amber)">25%</div></div>
+        <div class="exp-row"><div class="exp-name">חשמל, מים, גז<div class="exp-doc">📄 דפי חיוב חודשיים</div><div class="exp-note">💡 לפי אחוז שימוש עסקי בבית</div></div><div class="exp-pct" style="color:var(--amber)">25%</div></div>
+        <div class="exp-row"><div class="exp-name">תחזוקה וניקיון<div class="exp-doc">📄 קבלות וחשבוניות</div><div class="exp-note">💡 רק חלק המשרד לפי שימוש עסקי</div></div><div class="exp-pct" style="color:var(--amber)">25%</div></div>
+      </div>
+    </div>
+
+    <!-- רכב ותחבורה -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">🚗</span>
+        <span class="exp-cat-title">רכב ותחבורה</span>
+        <span class="exp-cat-count">6 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">דלק<div class="exp-doc">📄 חשבוניות תחנות דלק</div><div class="exp-note">💡 לפי שימוש עסקי בפועל — מומלץ יומן נסיעות</div></div><div class="exp-pct" style="color:var(--amber)">45–66%</div></div>
+        <div class="exp-row"><div class="exp-name">תיקונים ותחזוקה<div class="exp-doc">📄 חשבוניות מוסך</div></div><div class="exp-pct" style="color:var(--amber)">45–66%</div></div>
+        <div class="exp-row"><div class="exp-name">ביטוח רכב<div class="exp-doc">📄 פוליסה ודוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">45–66%</div></div>
+        <div class="exp-row"><div class="exp-name">ליסינג או השכרה<div class="exp-doc">📄 חוזה וחשבוניות</div></div><div class="exp-pct" style="color:var(--amber)">45–66%</div></div>
+        <div class="exp-row"><div class="exp-name">תחבורה ציבורית<div class="exp-doc">📄 כרטיסי נסיעה וחשבונית</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">חניה ומנוי חניון<div class="exp-doc">📄 קבלות וחשבוניות</div></div><div class="exp-pct" style="color:var(--amber)">לפי שימוש</div></div>
+        <div class="exp-row"><div class="exp-name">אגרת רישוי<div class="exp-doc">📄 קבלה מרישוי שנתי</div></div><div class="exp-pct" style="color:var(--amber)">45–66%</div></div>
+      </div>
+    </div>
+
+    <!-- תקשורת -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">📱</span>
+        <span class="exp-cat-title">תקשורת</span>
+        <span class="exp-cat-count">3 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">טלפון סלולרי<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">טלפון קווי ופקס<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">אינטרנט<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+      </div>
+    </div>
+
+    <!-- ציוד מחשוב -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">💻</span>
+        <span class="exp-cat-title">ציוד מחשוב ואלקטרוניקה</span>
+        <span class="exp-cat-count">6 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">מחשבים וטאבלטים<div class="exp-doc">📄 חשבונית ספק</div><div class="exp-note">💡 פחת אם מעל ₪3,000</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">מצלמות, מסכים, ציוד צילום<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ריהוט משרדי<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">מדפסות ודיו<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">כונני גיבוי ודיסק קשיח חיצוני<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ציוד רשת — רוטר, מתג, כבלים<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+      </div>
+    </div>
+
+    <!-- תוכנות ושירותים דיגיטליים -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">🖥️</span>
+        <span class="exp-cat-title">תוכנות ושירותים דיגיטליים</span>
+        <span class="exp-cat-count">8 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">תוכנות ניהול עסק וחשבוניות<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">תוכנות עריכה גרפית ווידאו<div class="exp-doc">📄 חשבונית ספק</div><div class="exp-note">💡 Adobe, Canva, Final Cut וכדומה</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">שירותי ענן ואחסון — מישראל<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">שירותי מוזיקה ברישוי — מחו"ל<div class="exp-doc">📄 חשבונית ספק</div><div class="exp-note">💡 אין מע"מ ישראלי — מוכר רק בדוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">פרסום ממומן ברשתות חברתיות — מחו"ל<div class="exp-doc">📄 חשבונית ספק</div><div class="exp-note">💡 Facebook, Google, TikTok — אין מע"מ, רק דוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">דומיין ואחסון אתרים<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">כלי אוטומציה — Zapier, Make<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">AI Tools — ChatGPT, Claude, Midjourney<div class="exp-doc">📄 חשבונית ספק</div><div class="exp-note">💡 מחו"ל — רק דוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">100%</div></div>
+      </div>
+    </div>
+
+    <!-- הכשרות וספרות -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">🎓</span>
+        <span class="exp-cat-title">הכשרות וספרות מקצועית</span>
+        <span class="exp-cat-count">5 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">ספרים מקצועיים<div class="exp-doc">📄 קבלה או חשבונית</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">קורסים והשתלמויות<div class="exp-doc">📄 חשבונית ואישור הרשמה</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">כנסים מקצועיים בארץ<div class="exp-doc">📄 חשבונית ותעודת השתתפות</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">כנסים בחו"ל<div class="exp-doc">📄 חשבונית, אישור, טיסות ולינה</div><div class="exp-note">💡 כולל טיסות ומלון — אין מע"מ, רק דוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">מנויים מקצועיים — LinkedIn Premium<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+      </div>
+    </div>
+
+    <!-- שירותים מקצועיים -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">👔</span>
+        <span class="exp-cat-title">שירותים מקצועיים</span>
+        <span class="exp-cat-count">8 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">רואה חשבון וייעוץ מס<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">עורך דין לייעוץ עסקי<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">יועצי שיווק ומעצבים<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">שירותי ניקיון במשרד — חיצוני<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">שליחויות ודואר<div class="exp-doc">📄 קבלה או חשבונית</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">מענה טלפוני ושירות לקוחות<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">מערכות CRM — Salesforce, HubSpot<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">תוכנות ניהול פרויקטים — Monday, Asana, Trello<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+      </div>
+    </div>
+
+    <!-- ביטוחים -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">🛡️</span>
+        <span class="exp-cat-title">ביטוחים</span>
+        <span class="exp-cat-count">4 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">ביטוח בריאות וחיים<div class="exp-doc">📄 פוליסה ודוח שנתי מהסוכן</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ביטוח אחריות מקצועית<div class="exp-doc">📄 פוליסה ודוח שנתי</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ביטוח ציוד ועסק<div class="exp-doc">📄 פוליסה ודוח שנתי</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ביטוח לאומי<div class="exp-doc">📄 דוחות חודשיים ושנתי</div><div class="exp-note">⚠️ חובה לשלם — לא מוכר למע"מ</div></div><div class="exp-pct" style="color:var(--red)">לא מוכר</div></div>
+      </div>
+    </div>
+
+    <!-- חסכונות והשקעות -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">💰</span>
+        <span class="exp-cat-title">חסכונות והשקעות</span>
+        <span class="exp-cat-count">3 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">קרן השתלמות<div class="exp-doc">📄 דוח הפקדות שנתי מהחברה המנהלת</div><div class="exp-note">💡 עד התקרה המוכרת</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">פנסיה לעצמאי<div class="exp-doc">📄 דוח שנתי מהחברה או הסוכן</div><div class="exp-note">💡 עד התקרה המוכרת</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">קופות גמל והשקעות<div class="exp-doc">📄 דוחות שנתיים, אישור ניכוי מס — טופס 867</div><div class="exp-note">💡 לפי מגבלות החוק</div></div><div class="exp-pct" style="color:var(--amber)">לפי מגבלות</div></div>
+      </div>
+    </div>
+
+    <!-- הוצאות נוספות -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">🎁</span>
+        <span class="exp-cat-title">הוצאות נוספות</span>
+        <span class="exp-cat-count">12 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">אירוח לקוחות<div class="exp-doc">📄 קבלות וחשבוניות</div><div class="exp-note">💡 רק חלק מההוצאה</div></div><div class="exp-pct" style="color:var(--amber)">80%</div></div>
+        <div class="exp-row"><div class="exp-name">מתנות ללקוחות ועובדים<div class="exp-doc">📄 קבלות וחשבוניות</div><div class="exp-note">💡 תקרה חוקית משתנה</div></div><div class="exp-pct" style="color:var(--amber)">לפי תקרה</div></div>
+        <div class="exp-row"><div class="exp-name">דמי חבר בלשכה מקצועית<div class="exp-doc">📄 קבלה או חשבונית</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">לבוש מקצועי מובהק עם לוגו<div class="exp-doc">📄 קבלה או חשבונית</div><div class="exp-note">💡 רק אם מובהק כלבוש עבודה</div></div><div class="exp-pct" style="color:var(--amber)">רק אם מובהק</div></div>
+        <div class="exp-row"><div class="exp-name">כרטיס טיסה לחו"ל<div class="exp-doc">📄 חשבונית ואישור רכישה</div><div class="exp-note">💡 אין מע"מ — מוכר רק בדוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">מלון בחו"ל<div class="exp-doc">📄 חשבונית ואישור הזמנה</div><div class="exp-note">💡 אין מע"מ — מוכר רק בדוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ציוד טכנולוגי שנקנה באילת<div class="exp-doc">📄 חשבונית או קבלה</div><div class="exp-note">💡 ללא מע"מ באילת — מוכר רק בדוח שנתי</div></div><div class="exp-pct" style="color:var(--amber)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ציוד משרדי — ניירת, מכשירים<div class="exp-doc">📄 חשבוניות וקבלות</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">פרסום מקומי — שלטים, עיתונים<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">אגרות ורישיונות עסק<div class="exp-doc">📄 קבלות מהרשויות</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">חברות במרכזי עסקים וקואורקינג<div class="exp-doc">📄 חשבונית חודשית</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">השתתפות ברשתות עסקיות — BNI, לידים<div class="exp-doc">📄 חשבונית וקבלה</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+      </div>
+    </div>
+
+    <!-- הוצאות משרד ומנהל -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">💳</span>
+        <span class="exp-cat-title">הוצאות משרד ומנהל</span>
+        <span class="exp-cat-count">5 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">מזכירות וניהול יומנים<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">שירותי הקלדה ותמלול<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">תרגום מסמכים מקצועיים<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">שירותי סריקה ודיגיטציה<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">אחסון ענן לגיבוי מסמכים — Dropbox, Google Drive<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+      </div>
+    </div>
+
+    <!-- שיווק ויחסי ציבור -->
+    <div class="exp-cat open">
+      <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size:20px">🎨</span>
+        <span class="exp-cat-title">שיווק ויחסי ציבור</span>
+        <span class="exp-cat-count">5 הוצאות</span>
+        <span class="exp-arrow">▼</span>
+      </div>
+      <div class="exp-cat-body">
+        <div class="exp-row"><div class="exp-name">צילום מקצועי לאתר ותדמית<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">עיצוב לוגו ומיתוג<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">קופירייטינג ותוכן שיווקי<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">ניהול רשתות חברתיות<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+        <div class="exp-row"><div class="exp-name">יעוץ שיווקי ומיצוב<div class="exp-doc">📄 חשבונית ספק</div></div><div class="exp-pct" style="color:var(--green)">100%</div></div>
+      </div>
+    </div>
+
+  </div><!-- /page-atzmai -->
+
+  <!-- ══ PAGE: קופונים ══ -->
+  <div id="page-coupons" style="display:none;padding:0 40px 40px">
+    <div class="page-head">
+      <div class="page-title-row">
+        <div class="page-ic" style="background:linear-gradient(135deg,rgba(255,59,92,.15),rgba(255,107,53,.08));border-color:rgba(255,59,92,.3);box-shadow:0 0 20px rgba(255,59,92,.15)">
+          <svg width="28" height="28" viewBox="0 0 26 26" fill="none">
+            <rect x="3" y="8" width="20" height="10" rx="2" stroke="#ff3b5c" stroke-width="1.6" fill="none"/>
+            <circle cx="3" cy="13" r="1.5" fill="#f2f5fb"/>
+            <circle cx="23" cy="13" r="1.5" fill="#f2f5fb"/>
+            <line x1="13" y1="9" x2="13" y2="17" stroke="#ff3b5c" stroke-dasharray="1.5 1.5" stroke-width="1.2"/>
+            <circle cx="8" cy="11" r="1" fill="#ff3b5c"/>
+            <circle cx="18" cy="15" r="1" fill="#ff3b5c"/>
+            <line x1="9" y1="16" x2="17" y2="10" stroke="#ff3b5c" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="page-title">קופונים והנחות מתעדכנים</div>
+          <div class="page-sub">הצעות בלעדיות, קופונים והנחות — מתעדכן יומית</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="gcard" style="text-align:center;padding:60px 40px">
+      <div style="font-size:72px;margin-bottom:20px">🎟️</div>
+      <div style="font-size:20px;font-weight:900;color:#0d1928;margin-bottom:12px">בקרוב!</div>
+      <div style="font-size:14px;color:rgba(10,20,50,.6);line-height:1.8;max-width:480px;margin:0 auto">
+        אנחנו עובדים על מערכת קופונים והנחות מתעדכנת — הנחות בלעדיות לרשתות, שירותים ומוצרים. חזרו בקרוב!
+      </div>
+    </div>
+  </div><!-- /page-coupons -->
+
+  <!-- ══ PAGE: ביטוחים ורכב ══ -->
+  <div id="page-bituchim" style="display:none;padding:0 40px 40px">
+    <div class="page-head">
+      <div class="page-title-row">
+        <div class="page-ic" style="background:linear-gradient(135deg,rgba(0,184,255,.15),rgba(0,112,221,.08));border-color:rgba(0,184,255,.3);box-shadow:0 0 20px rgba(0,184,255,.12)">
+          <svg width="28" height="28" viewBox="0 0 26 26" fill="none">
+            <path d="M13 3 L20 6 L20 12 C20 16 16 20 13 22 C10 20 6 16 6 12 L6 6 Z" stroke="#00b8ff" stroke-width="1.6" fill="none"/>
+            <path d="M10 12 L12 14 L16 9" stroke="#00b8ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <ellipse cx="9" cy="19" rx="1.5" ry="1" fill="#00b8ff"/>
+            <ellipse cx="17" cy="19" rx="1.5" ry="1" fill="#00b8ff"/>
+            <path d="M7.5 19 L7 17 L8 15 L18 15 L19 17 L18.5 19" stroke="#00b8ff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <div class="page-title">ביטוחים ורכב</div>
+          <div class="page-sub">השוואת מחירים, טיפים לחיסכון, וכל מה שצריך לדעת</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="gcard" style="text-align:center;padding:60px 40px">
+      <div style="font-size:72px;margin-bottom:20px">🚗🛡️</div>
+      <div style="font-size:20px;font-weight:900;color:#0d1928;margin-bottom:12px">בקרוב!</div>
+      <div style="font-size:14px;color:rgba(10,20,50,.6);line-height:1.8;max-width:480px;margin:0 auto">
+        אנחנו בונים מדריך מקיף לביטוחי רכב, בריאות, חיים, דירה ועוד — עם השוואת מחירים וטיפים לחיסכון. חזרו בקרוב!
+      </div>
+    </div>
+  </div><!-- /page-bituchim -->
+
+  <!-- ══ PAGE: משכנתא ודיור ══ -->
+  <div id="page-mashkanta" style="display:none;padding:0 40px 40px">
+    <div class="page-head">
+      <div class="page-title-row">
+        <div class="page-ic" style="background:linear-gradient(135deg,rgba(0,255,170,.15),rgba(0,196,122,.08));border-color:rgba(0,255,170,.3);box-shadow:0 0 20px rgba(0,255,170,.12)">
+          <svg width="28" height="28" viewBox="0 0 26 26" fill="none">
+            <path d="M4 13 L13 4 L22 13 L22 22 L16 22 L16 16 L10 16 L10 22 L4 22 Z" stroke="#00c47a" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+            <rect x="11" y="17" width="4" height="5" fill="#00c47a" opacity=".6"/>
+            <circle cx="8" cy="9" r="1" fill="#00c47a"/>
+            <circle cx="18" cy="19" r="1" fill="#00c47a"/>
+            <line x1="9" y1="20" x2="17" y2="8" stroke="#00c47a" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="page-title">משכנתא ודיור</div>
+          <div class="page-sub">מחשבונים, ריביות, מדריכים והשוואות</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="gcard" style="text-align:center;padding:60px 40px">
+      <div style="font-size:72px;margin-bottom:20px">🏠💰</div>
+      <div style="font-size:20px;font-weight:900;color:#0d1928;margin-bottom:12px">בקרוב!</div>
+      <div style="font-size:14px;color:rgba(10,20,50,.6);line-height:1.8;max-width:480px;margin:0 auto">
+        אנחנו בונים מחשבון משכנתא מתקדם, מדריכים לרכישת דירה, השוואת ריביות בין הבנקים, וטיפים לחיסכון. חזרו בקרוב!
+      </div>
+    </div>
+  </div><!-- /page-mashkanta -->
+
+  <!-- ══ PAGE: זכויות רפואיות ══ -->
+  <div id="page-zkuyot" style="display:none;padding:0 40px 40px">
+    <div class="page-head">
+      <div class="page-title-row">
+        <div class="page-ic" style="background:linear-gradient(135deg,rgba(255,59,92,.15),rgba(255,107,53,.08));border-color:rgba(255,59,92,.3);box-shadow:0 0 20px rgba(255,59,92,.15)">
+          <svg width="28" height="28" viewBox="0 0 26 26" fill="none">
+            <rect x="11" y="4" width="4" height="18" rx="1" fill="#ff3b5c"/>
+            <rect x="4" y="11" width="18" height="4" rx="1" fill="#ff3b5c"/>
+            <path d="M13 20 C13 20, 6 15, 6 10 C6 7, 8 6, 10 7 C11 8, 12 9, 13 10 C14 9, 15 8, 16 7 C18 6, 20 7, 20 10 C20 15, 13 20, 13 20 Z" stroke="#ff3b5c" stroke-width="1.3" fill="none" opacity=".5"/>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <div class="page-title">זכויות רפואיות</div>
+          <div class="page-sub">סל בריאות, ביטוחים, זכויות חולים וטיפול</div>
+        </div>
+        <button id="zkuyot-update-btn" class="go-btn" style="padding:10px 24px;font-size:13px" onclick="updateZkuyotContent()">
+          🔄 עדכן תוכן מהרשת
+        </button>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="zkuyot-loading" style="display:none">
+      <div class="gcard" style="text-align:center;padding:60px 40px">
+        <div style="font-size:48px;margin-bottom:20px;animation:spin 2s linear infinite">🔄</div>
+        <div style="font-size:18px;font-weight:900;color:#0d1928;margin-bottom:12px">מחפש ומנתח תוכן...</div>
+        <div style="font-size:13px;color:rgba(10,20,50,.6);line-height:1.8">
+          Claude סורק את הרשת למידע עדכני על זכויות רפואיות בישראל
+        </div>
+      </div>
+    </div>
+
+    <!-- Content area -->
+    <div id="zkuyot-content">
+      
+      <!-- טיפ חשוב -->
+      <div class="gcard" style="margin-bottom:20px;border-color:rgba(255,59,92,.3);background:rgba(255,59,92,.04)">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,59,92,.15);border:1px solid rgba(255,59,92,.35);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">💡</div>
+          <div>
+            <div style="font-size:16px;font-weight:900;color:var(--red)">חשוב לדעת</div>
+            <div style="font-size:12px;color:rgba(10,20,50,.6);margin-top:2px">זכויות רפואיות בסיסיות לכל אזרח</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:rgba(10,20,50,.75);line-height:1.8">
+          לפי חוק ביטוח בריאות ממלכתי (1995), כל אזרח ישראל זכאי לסל שירותי בריאות. המידע כאן עוזר לך להבין את הזכויות שלך ולקבל את הטיפול המגיע לך.
+        </div>
+      </div>
+
+      <div style="font-size:14px;font-weight:900;color:#0d1928;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid rgba(0,30,100,.1)">🏥 תתי-נושאים בזכויות רפואיות</div>
+
+      <!-- 1. סל הבריאות -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">📋</span>
+          <span class="exp-cat-title">סל הבריאות הממלכתי</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא סל הבריאות יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. קופות חולים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🏥</span>
+          <span class="exp-cat-title">קופות חולים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא קופות חולים יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. תרופות -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">💊</span>
+          <span class="exp-cat-title">תרופות</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא תרופות יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. בדיקות ואבחונים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🔬</span>
+          <span class="exp-cat-title">בדיקות ואבחונים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא בדיקות ואבחונים יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. ביטוח משלים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">⚕️</span>
+          <span class="exp-cat-title">ביטוח משלים (שב"ן)</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא ביטוח משלים יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. אשפוזים וניתוחים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🏨</span>
+          <span class="exp-cat-title">אשפוזים וניתוחים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא אשפוזים וניתוחים יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. זכויות מיוחדות -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">👴</span>
+          <span class="exp-cat-title">זכויות מיוחדות</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן לקשישים, נכים, ילדים וחולים כרוניים יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. החזרי כספים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">💰</span>
+          <span class="exp-cat-title">החזרי כספים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא החזרי כספים יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. ביטוח לנוסעים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🌍</span>
+          <span class="exp-cat-title">ביטוח לנוסעים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא ביטוח לנוסעים לחו"ל יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. ועדות רפואיות -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">📄</span>
+          <span class="exp-cat-title">ועדות רפואיות</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא ועדות רפואיות יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. בריאות הנפש -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🧠</span>
+          <span class="exp-cat-title">בריאות הנפש</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא פסיכולוגיה, פסיכיאטריה וטיפולים נפשיים יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. שיניים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🦷</span>
+          <span class="exp-cat-title">שיניים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא טיפולי שיניים ואורתודונטיה יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. אופטיקה ומשקפיים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">👓</span>
+          <span class="exp-cat-title">אופטיקה ומשקפיים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא בדיקות ראייה, משקפיים ועדשות מגע יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 14. הריון ולידה -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🤰</span>
+          <span class="exp-cat-title">הריון ולידה</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא זכויות בהריון, טיפולי פוריות ואישפוז יולדות יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 15. טיפולים פרה-רפואיים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🏃</span>
+          <span class="exp-cat-title">טיפולים פרה-רפואיים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא פיזיותרפיה, ריפוי בעיסוק וקלינאות תקשורת יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 16. מכשור רפואי ועזרים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">♿</span>
+          <span class="exp-cat-title">מכשור רפואי ועזרים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא כיסאות גלגלים, מקלות הליכה ומכשירי עזר יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 17. שירותי חירום -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">🚑</span>
+          <span class="exp-cat-title">שירותי חירום</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא מד"א, חדר מיון ואמבולנס יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+      <!-- 18. זכויות עובדים -->
+      <div class="exp-cat">
+        <div class="exp-cat-head" onclick="this.parentElement.classList.toggle('open')">
+          <span style="font-size:20px">💼</span>
+          <span class="exp-cat-title">זכויות עובדים</span>
+          <span class="exp-cat-count">בקרוב</span>
+          <span class="exp-arrow">▼</span>
+        </div>
+        <div class="exp-cat-body">
+          <div style="padding:20px;text-align:center;color:rgba(10,20,50,.5)">
+            תוכן בנושא ימי מחלה, דמי מחלה וביטוח לאומי יתווסף בקרוב
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /page-zkuyot -->
+
+  </main>
+</div><!-- /layout -->
+
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
+<footer id="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <path d="M16 3 L29 9 L29 18 C29 24 22 29 16 31 C10 29 3 24 3 18 L3 9 Z" fill="rgba(0,120,255,.12)" stroke="var(--blue)" stroke-width="1.8"/>
+          <text x="16" y="21" font-size="11" fill="var(--blue)" font-family="Heebo" text-anchor="middle" font-weight="900">₪</text>
+        </svg>
+        <span class="footer-logo-name">מגן כסף</span>
+      </div>
+      <div class="footer-tagline">הנווט הכלכלי המקיף לחסכון של אזרחי ישראל</div>
+      <div class="footer-contact">
+        <div>דניאל קרסני</div>
+        <div>חנקין 17, חולון</div>
+        <a href="tel:0523877539">052-387-7539</a>
+      </div>
+    </div>
+
+    <div class="footer-links-group">
+      <div class="footer-col-title">ניווט</div>
+      <button class="footer-link" onclick="openModal('sitemap')">מפת אתר</button>
+      <button class="footer-link" onclick="openModal('privacy')">מדיניות פרטיות</button>
+      <button class="footer-link" onclick="openModal('accessibility')">נגישות</button>
+      <button class="footer-link" onclick="openModal('terms')">תנאים והגבלות</button>
+    </div>
+
+    <div class="footer-links-group">
+      <div class="footer-col-title">כלים</div>
+      <button class="footer-link">מדד החיים</button>
+      <button class="footer-link">מסלולי השקעה</button>
+      <button class="footer-link">עגלת הסופר</button>
+      <button class="footer-link">מדריך עצמאיים</button>
+    </div>
+
+    <div class="footer-links-group">
+      <div class="footer-col-title">צור קשר</div>
+      <a class="footer-link" href="tel:0523877539">📞 052-387-7539</a>
+      <a class="footer-link wa-link" href="https://chat.whatsapp.com/" target="_blank">💬 קבוצת וואטסאפ</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 מגן כסף — כל הזכויות שמורות</span>
+    <span class="footer-sep">·</span>
+    <span>האתר אינו מהווה ייעוץ פיננסי מוסדר</span>
+  </div>
+</footer>
+
+<!-- ══ MODALS ══════════════════════════════════════════════ -->
+<div id="modal-overlay" onclick="closeModal()"></div>
+
+<!-- מפת אתר -->
+<div id="modal-sitemap" class="site-modal">
+  <div class="modal-head">
+    <h2 class="modal-title">🗺️ מפת אתר</h2>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section-title">דפים ראשיים</div>
+    <div class="sitemap-grid">
+      <div class="sitemap-item"><span class="sitemap-ic">📊</span><div><div class="sitemap-name">מדד החיים האמיתיים</div><div class="sitemap-desc">ניתוח הכנסות והוצאות חודשיות לפי עיר וגודל משפחה</div></div></div>
+      <div class="sitemap-item"><span class="sitemap-ic">🛒</span><div><div class="sitemap-name">עגלת הסופר</div><div class="sitemap-desc">השוואת מחירים בין רשתות השיווק הגדולות בישראל</div></div></div>
+      <div class="sitemap-item"><span class="sitemap-ic">📈</span><div><div class="sitemap-name">מסלולי השקעה</div><div class="sitemap-desc">תשואות מדדים — S&P 500, ת"א 35, נאסד"ק, זהב, ביטקוין ועוד</div></div></div>
+      <div class="sitemap-item"><span class="sitemap-ic">🐷</span><div><div class="sitemap-name">מחשבון חיסכון</div><div class="sitemap-desc">תכנון יעדים פיננסיים לטווח קצר וארוך</div></div></div>
+      <div class="sitemap-item"><span class="sitemap-ic">💼</span><div><div class="sitemap-name">עצמאיים</div><div class="sitemap-desc">מדריך הוצאות מוכרות, מע"מ, דוח שנתי לעוסק מורשה</div></div></div>
+      <div class="sitemap-item"><span class="sitemap-ic">👔</span><div><div class="sitemap-name">שכירים</div><div class="sitemap-desc">תלוש שכר, החזרי מס, זכויות עובד וקרנות פנסיה</div></div></div>
+    </div>
+    <div class="modal-section-title" style="margin-top:20px">מידע משפטי</div>
+    <div class="sitemap-grid">
+      <div class="sitemap-item" style="cursor:pointer" onclick="closeModal();setTimeout(()=>openModal('privacy'),100)"><span class="sitemap-ic">🔒</span><div><div class="sitemap-name">מדיניות פרטיות</div><div class="sitemap-desc">איך אנחנו מטפלים במידע שלך</div></div></div>
+      <div class="sitemap-item" style="cursor:pointer" onclick="closeModal();setTimeout(()=>openModal('terms'),100)"><span class="sitemap-ic">📋</span><div><div class="sitemap-name">תנאים והגבלות</div><div class="sitemap-desc">תנאי השימוש באתר</div></div></div>
+      <div class="sitemap-item" style="cursor:pointer" onclick="closeModal();setTimeout(()=>openModal('accessibility'),100)"><span class="sitemap-ic">♿</span><div><div class="sitemap-name">הצהרת נגישות</div><div class="sitemap-desc">מחויבות האתר לנגישות דיגיטלית</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- מדיניות פרטיות -->
+<div id="modal-privacy" class="site-modal">
+  <div class="modal-head">
+    <h2 class="modal-title">🔒 מדיניות פרטיות</h2>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-meta">עודכן: מאי 2026 · מגן כסף — דניאל קרסני, חנקין 17, חולון · 052-387-7539</div>
+
+    <div class="modal-section-title">1. כללי</div>
+    <p class="modal-p">מגן כסף מכבד את פרטיותך ומחויב להגן על המידע האישי שלך. מדיניות זו מסבירה אילו נתונים נאספים, כיצד הם משמשים, ומה זכויותיך.</p>
+
+    <div class="modal-section-title">2. מידע שנאסף</div>
+    <p class="modal-p">האתר <strong>אינו אוסף ואינו שומר</strong> מידע אישי מזהה. כל הנתונים שאתה מזין — הכנסה, עיר מגורים, מספר ילדים — <strong>מעובדים מקומית בדפדפן בלבד</strong> ואינם נשלחים לשרת כלשהו.</p>
+    <p class="modal-p">האתר עשוי לקבל עדכוני תוכן שוטפים מבינה מלאכותית (Anthropic Claude API) לצורך רענון הטיקר — פנייה זו אנונימית לחלוטין ואינה כוללת נתוני משתמש.</p>
+
+    <div class="modal-section-title">3. עוגיות (Cookies)</div>
+    <p class="modal-p">האתר אינו משתמש בעוגיות מעקב, פרסומיות או של צד שלישי. ייתכן שהדפדפן שלך ישמור מידע מקומי (localStorage) לצורך שיפור חוויית המשתמש בלבד.</p>
+
+    <div class="modal-section-title">4. שיתוף מידע</div>
+    <p class="modal-p">לא נמכור, לא נשכיר ולא נעביר כל מידע אישי לצד שלישי. האתר אינו מכיל פרסומות ואינו משתמש בכלי ניתוח מעקב.</p>
+
+    <div class="modal-section-title">5. אבטחת מידע</div>
+    <p class="modal-p">מכיוון שלא נשמר מידע אישי בשרתים, לא קיים סיכון דליפת נתונים אישיים. כל עיבוד הנתונים מתבצע בסביבה המקומית של המשתמש.</p>
+
+    <div class="modal-section-title">6. זכויות המשתמש</div>
+    <p class="modal-p">בהתאם לחוק הגנת הפרטיות (תשמ"א-1981) ותיקוניו, יש לך זכות לעיין, לתקן או למחוק כל מידע הנוגע אליך. לפנייה: <strong>0523877539</strong> | חנקין 17, חולון.</p>
+
+    <div class="modal-section-title">7. שינויים במדיניות</div>
+    <p class="modal-p">אנו שומרים לעצמנו את הזכות לעדכן מדיניות זו. שינויים מהותיים יפורסמו בדף זה עם תאריך עדכון.</p>
+  </div>
+</div>
+
+<!-- נגישות -->
+<div id="modal-accessibility" class="site-modal">
+  <div class="modal-head">
+    <h2 class="modal-title">♿ הצהרת נגישות</h2>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-meta">מגן כסף — דניאל קרסני, חנקין 17, חולון · 052-387-7539</div>
+
+    <div class="modal-section-title">מחויבות לנגישות</div>
+    <p class="modal-p">מגן כסף מחויב להנגיש את שירותיו לכלל האוכלוסייה, לרבות אנשים עם מוגבלויות, בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), תשע"ג-2013.</p>
+
+    <div class="modal-section-title">רמת נגישות</div>
+    <p class="modal-p">האתר שואף לעמוד בדרישות תקן <strong>WCAG 2.1 ברמה AA</strong>. האתר כולל:</p>
+    <ul class="modal-list">
+      <li>כיתוב חלופי (alt text) לאלמנטים ויזואליים</li>
+      <li>ניגודיות צבע עומדת בדרישות תקן AA</li>
+      <li>תמיכה בניווט מקלדת</li>
+      <li>כיוון RTL נכון לשפה העברית</li>
+      <li>גופן ברור וקריא (Heebo) בגדלים נגישים</li>
+      <li>מבנה כותרות היררכי ומסודר</li>
+    </ul>
+
+    <div class="modal-section-title">מגבלות ידועות</div>
+    <p class="modal-p">חלק מהגרפים והתרשימים עדיין אינם מלאים עם תיאורים לקוראי מסך. אנו עובדים על שיפור זה.</p>
+
+    <div class="modal-section-title">פנייה בנושא נגישות</div>
+    <p class="modal-p">נתקלת בבעיית נגישות? נשמח לשמוע ממך:</p>
+    <div class="modal-contact-box">
+      <div>רכז נגישות: <strong>דניאל קרסני</strong></div>
+      <div>טלפון: <a href="tel:0523877539" style="color:var(--blue);font-weight:700">052-387-7539</a></div>
+      <div>כתובת: חנקין 17, חולון</div>
+    </div>
+    <p class="modal-p">פניות יטופלו בתוך 5 ימי עסקים.</p>
+  </div>
+</div>
+
+<!-- תנאים והגבלות -->
+<div id="modal-terms" class="site-modal">
+  <div class="modal-head">
+    <h2 class="modal-title">📋 תנאים והגבלות</h2>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-meta">עודכן: מאי 2026 · מגן כסף — דניאל קרסני, חנקין 17, חולון · 052-387-7539</div>
+
+    <div class="modal-section-title">1. הסכמה לתנאים</div>
+    <p class="modal-p">השימוש באתר מגן כסף מהווה הסכמה מלאה לתנאים המפורטים להלן. אם אינך מסכים לתנאים אלה, נבקשך להימנע משימוש באתר.</p>
+
+    <div class="modal-section-title">2. מהות השירות</div>
+    <p class="modal-p">מגן כסף הוא כלי דיגיטלי לניתוח פיננסי אישי, המספק מידע כללי בנושאי עלות חיים, השקעות וניהול תקציב. <strong>האתר אינו מהווה ייעוץ פיננסי, ייעוץ מס, ייעוץ השקעות או ייעוץ משפטי מוסדר</strong> על פי חוק הסדרת העיסוק בייעוץ השקעות.</p>
+
+    <div class="modal-section-title">3. אחריות המשתמש</div>
+    <p class="modal-p">הנתונים המוצגים באתר מבוססים על מקורות ציבוריים (בנק ישראל, הלמ"ס, data.gov.il) ועשויים שלא לשקף את המציאות העדכנית לחלוטין. על המשתמש לאמת נתונים לפני קבלת החלטות פיננסיות.</p>
+
+    <div class="modal-section-title">4. הגבלת אחריות</div>
+    <p class="modal-p">מגן כסף ובעליו לא יישאו באחריות לכל נזק ישיר, עקיף, מקרי או תוצאתי הנובע משימוש או הסתמכות על המידע המוצג באתר.</p>
+
+    <div class="modal-section-title">5. קניין רוחני</div>
+    <p class="modal-p">כל התכנים, העיצוב, הלוגואים והקוד של אתר מגן כסף הם רכושו הבלעדי של דניאל קרסני. חל איסור על העתקה, הפצה או שימוש מסחרי ללא אישור מפורש בכתב.</p>
+
+    <div class="modal-section-title">6. שינויים בשירות</div>
+    <p class="modal-p">אנו שומרים לעצמנו את הזכות לשנות, להשהות או להפסיק כל חלק מהשירות בכל עת וללא הודעה מוקדמת.</p>
+
+    <div class="modal-section-title">7. דין ושיפוט</div>
+    <p class="modal-p">על תנאים אלה יחול הדין הישראלי. כל מחלוקת תובא לבתי המשפט המוסמכים במחוז תל אביב.</div>
+
+    <div class="modal-section-title">8. יצירת קשר</div>
+    <div class="modal-contact-box">
+      <div><strong>דניאל קרסני</strong></div>
+      <div>חנקין 17, חולון</div>
+      <div>טלפון: <a href="tel:0523877539" style="color:var(--blue);font-weight:700">052-387-7539</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const D=new Date();
+document.getElementById('dateChip').textContent=D.toLocaleDateString('he-IL',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+
+// ── DIGITAL CLOCK ────────────────────────────────────────────
+function updateClock(){
+  const n=new Date();
+  const hh=String(n.getHours()).padStart(2,'0');
+  const mm=String(n.getMinutes()).padStart(2,'0');
+  const ss=String(n.getSeconds()).padStart(2,'0');
+  document.getElementById('clockChip').textContent=hh+':'+mm+':'+ss;
+}
+updateClock();
+setInterval(updateClock,1000);
+
+// ── MODAL ────────────────────────────────────────────────────
+function openModal(id){
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('modal-'+id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.querySelectorAll('.site-modal').forEach(m=>m.classList.remove('open'));
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ── AUTO-UPDATE CONTENT ──────────────────────────────────────
+async function updateZkuyotContent() {
+  const loadingEl = document.getElementById('zkuyot-loading');
+  const contentEl = document.getElementById('zkuyot-content');
+  const btn = document.getElementById('zkuyot-update-btn');
+  
+  // Show loading
+  loadingEl.style.display = 'block';
+  contentEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = '⏳ מעדכן...';
+  
+  try {
+    // Call Claude API with web_search tool
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        tools: [{
+          type: 'web_search_20250305',
+          name: 'web_search'
+        }],
+        messages: [{
+          role: 'user',
+          content: `אתה עוזר מקצועי שבונה תוכן לאתר פיננסי ישראלי. תפקידך: לחפש ברשת מידע עדכני על זכויות רפואיות בישראל ולבנות תוכן HTML מסודר.
+
+חפש מידע על:
+1. סל הבריאות - מה כלול, מה לא כלול
+2. זכויות חולים - מה מגיע לכל אזרח
+3. ביטוח משלים - האם כדאי, כמה עולה
+4. תרופות - מתי מקבלים בחינם, מתי משלמים
+5. בדיקות מעבדה - מה מכוסה בסל
+6. ניתוחים וטיפולים - זכויות ותורים
+7. זכויות מיוחדות - נכים, קשישים, ילדים
+
+השתמש ב-web_search כדי למצוא מידע עדכני מאתרים רשמיים (משרד הבריאות, קופות חולים, אתרים ממשלתיים).
+
+אחרי שתמצא את המידע, החזר לי HTML מוכן להצגה בעברית בפורמט הזה:
+
+<div class="gcard" style="margin-bottom:20px">
+  <h3 style="font-size:18px;font-weight:900;color:#0d1928;margin:0 0 12px">📋 כותרת הנושא</h3>
+  <p style="font-size:14px;color:rgba(10,20,50,.8);line-height:1.8;margin:0">תוכן מפורט בעברית...</p>
+</div>
+
+חשוב: השב רק עם HTML מוכן - בלי הסברים, בלי markdown, רק קוד HTML טהור שאני יכול להכניס ישירות ל-innerHTML.`
+        }]
+      })
+    });
+    
+    const data = await response.json();
+    
+    // Extract HTML from response
+    let htmlContent = '';
+    
+    // Parse the response - look for text blocks
+    if (data.content) {
+      for (const block of data.content) {
+        if (block.type === 'text') {
+          htmlContent += block.text;
+        }
+      }
+    }
+    
+    // Clean up the HTML (remove markdown code blocks if any)
+    htmlContent = htmlContent.replace(/```html\n?/g, '').replace(/```\n?/g, '');
+    
+    // Display the content
+    if (htmlContent.trim()) {
+      contentEl.innerHTML = htmlContent;
+      
+      // Add update timestamp
+      const timestamp = new Date().toLocaleString('he-IL', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      contentEl.innerHTML += `
+        <div style="text-align:center;padding:20px;font-size:11px;color:rgba(10,20,50,.4)">
+          ✅ עודכן: ${timestamp}
+        </div>
+      `;
+    } else {
+      throw new Error('לא התקבל תוכן');
+    }
+    
+  } catch (error) {
+    console.error('Error updating content:', error);
+    contentEl.innerHTML = `
+      <div class="gcard" style="text-align:center;padding:40px;border-color:rgba(255,59,92,.3)">
+        <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+        <div style="font-size:16px;font-weight:900;color:#ff3b5c;margin-bottom:8px">שגיאה בעדכון</div>
+        <div style="font-size:13px;color:rgba(10,20,50,.6)">
+          ${error.message || 'אנא נסה שוב מאוחר יותר'}
+        </div>
+      </div>
+    `;
+  } finally {
+    loadingEl.style.display = 'none';
+    contentEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = '🔄 עדכן תוכן מהרשת';
+  }
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────
+function navTo(page){
+  // Hide/show pages
+  const pageMedad = document.getElementById('page-medad');
+  const pageAtzmai = document.getElementById('page-atzmai');
+  const pageCoupons = document.getElementById('page-coupons');
+  const pageBituchim = document.getElementById('page-bituchim');
+  const pageMashkanta = document.getElementById('page-mashkanta');
+  const pageZkuyot = document.getElementById('page-zkuyot');
+  
+  if(page === 'medad'){
+    if(pageMedad) pageMedad.style.display = 'block';
+    if(pageAtzmai) pageAtzmai.style.display = 'none';
+    if(pageCoupons) pageCoupons.style.display = 'none';
+    if(pageBituchim) pageBituchim.style.display = 'none';
+    if(pageMashkanta) pageMashkanta.style.display = 'none';
+    if(pageZkuyot) pageZkuyot.style.display = 'none';
+  } else if(page === 'atzmai'){
+    if(pageMedad) pageMedad.style.display = 'none';
+    if(pageAtzmai) pageAtzmai.style.display = 'block';
+    if(pageCoupons) pageCoupons.style.display = 'none';
+    if(pageBituchim) pageBituchim.style.display = 'none';
+    if(pageMashkanta) pageMashkanta.style.display = 'none';
+    if(pageZkuyot) pageZkuyot.style.display = 'none';
+  } else if(page === 'coupons'){
+    if(pageMedad) pageMedad.style.display = 'none';
+    if(pageAtzmai) pageAtzmai.style.display = 'none';
+    if(pageCoupons) pageCoupons.style.display = 'block';
+    if(pageBituchim) pageBituchim.style.display = 'none';
+    if(pageMashkanta) pageMashkanta.style.display = 'none';
+    if(pageZkuyot) pageZkuyot.style.display = 'none';
+  } else if(page === 'bituchim'){
+    if(pageMedad) pageMedad.style.display = 'none';
+    if(pageAtzmai) pageAtzmai.style.display = 'none';
+    if(pageCoupons) pageCoupons.style.display = 'none';
+    if(pageBituchim) pageBituchim.style.display = 'block';
+    if(pageMashkanta) pageMashkanta.style.display = 'none';
+    if(pageZkuyot) pageZkuyot.style.display = 'none';
+  } else if(page === 'mashkanta'){
+    if(pageMedad) pageMedad.style.display = 'none';
+    if(pageAtzmai) pageAtzmai.style.display = 'none';
+    if(pageCoupons) pageCoupons.style.display = 'none';
+    if(pageBituchim) pageBituchim.style.display = 'none';
+    if(pageMashkanta) pageMashkanta.style.display = 'block';
+    if(pageZkuyot) pageZkuyot.style.display = 'none';
+  } else if(page === 'zkuyot'){
+    if(pageMedad) pageMedad.style.display = 'none';
+    if(pageAtzmai) pageAtzmai.style.display = 'none';
+    if(pageCoupons) pageCoupons.style.display = 'none';
+    if(pageBituchim) pageBituchim.style.display = 'none';
+    if(pageMashkanta) pageMashkanta.style.display = 'none';
+    if(pageZkuyot) pageZkuyot.style.display = 'block';
+  } else if(page === 'sachir'){
+    if(pageMedad) pageMedad.style.display = 'none';
+    if(pageAtzmai) pageAtzmai.style.display = 'none';
+    if(pageCoupons) pageCoupons.style.display = 'none';
+    if(pageBituchim) pageBituchim.style.display = 'none';
+    if(pageMashkanta) pageMashkanta.style.display = 'none';
+    if(pageZkuyot) pageZkuyot.style.display = 'none';
+    // Future: add page-sachir
+  }
+  
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('on'));
+  const btn = document.querySelector('.nav-item[onclick*="'+page+'"]');
+  if(btn) btn.classList.add('on');
+  
+  // Scroll to top
+  window.scrollTo(0,0);
+}
+
+const CITY={
+  "תל אביב":{h:7100,t:680,f:940},"רמת גן":{h:5200,t:620,f:860},"גבעתיים":{h:5400,t:610,f:850},
+  "בני ברק":{h:4200,t:580,f:790},"פתח תקווה":{h:4600,t:590,f:810},"ראשון לציון":{h:4900,t:610,f:840},
+  "רחובות":{h:4400,t:580,f:800},"נס ציונה":{h:4600,t:590,f:810},"לוד":{h:3400,t:540,f:750},
+  "רמלה":{h:3300,t:530,f:740},"מודיעין":{h:5000,t:640,f:820},"אזור":{h:4200,t:570,f:790},
+  "חולון":{h:4700,t:600,f:820},"בת ים":{h:4300,t:590,f:800},"יהוד":{h:4500,t:580,f:800},
+  "אור יהודה":{h:4100,t:570,f:790},"קריית אונו":{h:5100,t:610,f:840},"גבעת שמואל":{h:5300,t:620,f:850},
+  "רמת השרון":{h:5500,t:630,f:860},"הרצליה":{h:5700,t:650,f:880},"כפר סבא":{h:5000,t:620,f:840},
+  "רעננה":{h:5200,t:630,f:850},"הוד השרון":{h:4900,t:610,f:830},"נתניה":{h:4300,t:570,f:800},
+  "קלנסווה":{h:2600,t:490,f:700},"טייבה":{h:2700,t:490,f:700},"טירה":{h:2600,t:490,f:700},
+  "קדימה-צורן":{h:4600,t:600,f:820},"אלעד":{h:3900,t:560,f:780},"ראש העין":{h:4500,t:580,f:800},
+  "ירושלים":{h:5300,t:560,f:820},"בית שמש":{h:3900,t:540,f:770},"מבשרת ציון":{h:4600,t:560,f:800},
+  "מעלה אדומים":{h:4200,t:550,f:790},"גבעת זאב":{h:4100,t:550,f:780},"ביתר עילית":{h:3200,t:510,f:740},
+  "אבו גוש":{h:3800,t:550,f:780},"הר אדר":{h:5100,t:570,f:830},"קרית יערים":{h:4000,t:550,f:780},
+  "חיפה":{h:3900,t:520,f:770},"קריית ביאליק":{h:3500,t:510,f:750},"קריית ים":{h:3200,t:500,f:740},
+  "קריית מוצקין":{h:3600,t:510,f:750},"קריית אתא":{h:3400,t:510,f:750},"קריית טבעון":{h:4200,t:530,f:770},
+  "טירת כרמל":{h:3300,t:500,f:740},"נשר":{h:3600,t:510,f:750},"עכו":{h:3100,t:500,f:730},
+  "נהריה":{h:3500,t:510,f:750},"כרמיאל":{h:3200,t:490,f:730},"מגדל העמק":{h:2800,t:480,f:710},
+  "עפולה":{h:2700,t:480,f:710},"נצרת":{h:2600,t:470,f:700},"נצרת עילית (נוף הגליל)":{h:2800,t:480,f:710},
+  "שפרעם":{h:2500,t:470,f:700},"טבריה":{h:2700,t:480,f:710},"צפת":{h:2500,t:470,f:700},
+  "קצרין":{h:3100,t:490,f:730},"מעלות תרשיחא":{h:2900,t:480,f:720},"סח'נין":{h:2400,t:460,f:690},
+  "באקה אל-גרביה":{h:2500,t:470,f:700},"אום אל-פחם":{h:2400,t:460,f:690},"יקנעם":{h:3800,t:520,f:760},
+  "חדרה":{h:3800,t:520,f:760},"פרדס חנה-כרכור":{h:3700,t:520,f:760},"בנימינה":{h:4200,t:540,f:780},
+  "רכסים":{h:3900,t:520,f:760},"קריית שמונה":{h:2600,t:470,f:700},"ראש פינה":{h:3000,t:480,f:720},
+  "טמרה":{h:2400,t:460,f:690},"אשדוד":{h:3700,t:520,f:760},"אשקלון":{h:3400,t:510,f:750},
+  "קריית גת":{h:2900,t:490,f:720},"יבנה":{h:4000,t:540,f:770},"גדרה":{h:3800,t:530,f:760},
+  "קריית מלאכי":{h:2700,t:480,f:710},"באר שבע":{h:2900,t:490,f:720},"אילת":{h:4000,t:520,f:820},
+  "דימונה":{h:2100,t:450,f:680},"ערד":{h:2200,t:460,f:690},"נתיבות":{h:2400,t:460,f:690},
+  "שדרות":{h:2500,t:470,f:700},"אופקים":{h:2200,t:450,f:680},"רהט":{h:1900,t:440,f:660},
+  "ירוחם":{h:1900,t:440,f:660},"מצפה רמון":{h:2100,t:450,f:680},"אריאל":{h:3200,t:500,f:740},
+  "מעלה אפרים":{h:3000,t:490,f:730},"אלפי מנשה":{h:4100,t:540,f:770},"גוש עציון":{h:4400,t:550,f:780},
+  "גן יבנה":{h:3900,t:530,f:760},"כפר יונה":{h:4100,t:540,f:770},"זכרון יעקב":{h:4500,t:560,f:800},
+  "כפר ורדים":{h:3700,t:510,f:750},"מגדל":{h:3200,t:490,f:730},
+};
+
+const CHAINS=[
+  {n:"רמי לוי",f:.82,tier:"זול"},{n:"מחסני השוק",f:.84,tier:"זול"},
+  {n:"זול ובגדול",f:.85,tier:"זול"},{n:"סופר ספיר",f:.86,tier:"זול"},
+  {n:"סופר חסד",f:.86,tier:"זול"},{n:"סופר ברקת",f:.87,tier:"זול"},
+  {n:"חצי חינם",f:.88,tier:"זול"},{n:"אושר עד",f:.89,tier:"זול"},
+  {n:"סטופ מרקט",f:.91,tier:"בינוני"},{n:"ויקטורי",f:.93,tier:"בינוני"},
+  {n:"קשת טעמים",f:.93,tier:"בינוני"},{n:"סופר יודה",f:.94,tier:"בינוני"},
+  {n:"מרב - מזון כל",f:.94,tier:"בינוני"},{n:"סיטי מרקט",f:.95,tier:"בינוני"},
+  {n:"ספאר",f:.96,tier:"בינוני"},{n:"טיב טעם",f:.97,tier:"בינוני"},
+  {n:"שופרסל",f:1.00,tier:"בסיס"},{n:"יוחננוף",f:1.01,tier:"בסיס"},
+  {n:"פרשמרקט",f:1.02,tier:"בסיס"},{n:"קרפור",f:1.04,tier:"יקר"},
+  {n:"סופר מרקט",f:1.05,tier:"יקר"},
+];
+
+const INVEST=[
+  {n:"S&P 500",            a:.179, ic:"🇺🇸", cat:"מניות", risk:"בינוני-גבוה", top:true},
+  {n:"נאסד\"ק 100",        a:.211, ic:"💻", cat:"מניות", risk:"גבוה",         top:false},
+  {n:"תל אביב 35",         a:.520, ic:"🇮🇱", cat:"מניות", risk:"גבוה",         top:false},
+  {n:"MSCI World",         a:.187, ic:"🌍", cat:"מניות", risk:"בינוני-גבוה",  top:false},
+  {n:"Semiconductor SOXX", a:.354, ic:"🔬", cat:"מניות", risk:"גבוה מאוד",    top:false},
+  {n:"זהב",                a:.272, ic:"🥇", cat:"סחורות",risk:"בינוני",        top:false},
+  {n:"Bitcoin",            a:1.184,ic:"₿",  cat:"קריפטו",risk:"גבוה מאוד",    top:false},
+  {n:"Ethereum",           a:.437, ic:"Ξ",  cat:"קריפטו",risk:"גבוה מאוד",    top:false},
+  {n:"קרן השתלמות מנייתי",a:.287, ic:"🎓", cat:"חיסכון",risk:"גבוה",         top:false},
+  {n:"פנסיה מסלול כללי",   a:.091, ic:"👴", cat:"חיסכון",risk:"בינוני",        top:false},
+  {n:"אג\"ח ממשלתי ישראל", a:.052, ic:"📜", cat:"אג\"ח", risk:"נמוך",          top:false},
+  {n:"אג\"ח קונצרני",      a:.064, ic:"📄", cat:"אג\"ח", risk:"נמוך-בינוני",   top:false},
+  {n:"קרן כספית שקלית",   a:.043, ic:"💵", cat:"חיסכון",risk:"נמוך מאוד",     top:false},
+  {n:"פיקדון בנק 12 חודש", a:.046, ic:"🏧", cat:"חיסכון",risk:"ללא",           top:false},
+  {n:"מזומן (ללא השקעה)",  a:-.041,ic:"💸", cat:"מזומן", risk:"הפסד ריאלי",    top:false},
+];
+
+const IDX={
+  "S&P 500":                 {ic:"🇺🇸",cat:"מניות עולמי",ytd:-3.2,y2025:17.9,y3:36.1,y5:86.4},
+  "נאסד\"ק 100":             {ic:"💻",cat:"מניות עולמי",ytd:-6.1,y2025:21.1,y3:22.4,y5:108.7},
+  "דאו ג'ונס":               {ic:"🏭",cat:"מניות עולמי",ytd:-2.8,y2025:14.9,y3:26.3,y5:55.2},
+  "Russell 2000":             {ic:"🔵",cat:"מניות עולמי",ytd:-7.4,y2025:6.0,y3:9.1,y5:38.4},
+  "MSCI World":               {ic:"🌍",cat:"מניות עולמי",ytd:2.1,y2025:18.7,y3:23.8,y5:71.6},
+  "MSCI Emerging Markets":    {ic:"🌏",cat:"מניות עולמי",ytd:3.4,y2025:7.5,y3:5.1,y5:19.2},
+  "Euro Stoxx 50":            {ic:"🇪🇺",cat:"מניות עולמי",ytd:11.3,y2025:8.3,y3:25.7,y5:50.1},
+  "FTSE 100":                 {ic:"🇬🇧",cat:"מניות עולמי",ytd:6.2,y2025:5.7,y3:19.4,y5:33.8},
+  "Nikkei 225":               {ic:"🇯🇵",cat:"מניות עולמי",ytd:-9.1,y2025:19.2,y3:40.3,y5:86.1},
+  "תל אביב 35":               {ic:"🇮🇱",cat:"ישראל",ytd:13.4,y2025:52.0,y3:74.2,y5:118.3},
+  "תל אביב 125":              {ic:"📈",cat:"ישראל",ytd:11.1,y2025:38.4,y3:58.6,y5:96.7},
+  "תל אביב SME60":            {ic:"🏢",cat:"ישראל",ytd:7.3,y2025:22.1,y3:31.4,y5:62.3},
+  "אג\"ח ממשלתי ישראל":       {ic:"📜",cat:"ישראל",ytd:1.8,y2025:5.2,y3:3.9,y5:15.6},
+  "אג\"ח קונצרני ישראל":      {ic:"📄",cat:"ישראל",ytd:2.1,y2025:6.4,y3:5.3,y5:19.8},
+  "ARK Innovation (ARKK)":    {ic:"🚀",cat:"סקטורים",ytd:-18.4,y2025:22.1,y3:-14.7,y5:3.1},
+  "Semiconductor (SOXX)":     {ic:"🔬",cat:"סקטורים",ytd:-10.2,y2025:35.4,y3:44.8,y5:138.2},
+  "AI & Tech (QQQ)":          {ic:"🤖",cat:"סקטורים",ytd:-6.1,y2025:25.7,y3:20.1,y5:101.4},
+  "ביומד ובריאות (XLV)":      {ic:"💊",cat:"סקטורים",ytd:3.1,y2025:2.1,y3:16.2,y5:49.7},
+  "אנרגיה ירוקה (ICLN)":      {ic:"🌱",cat:"סקטורים",ytd:-2.8,y2025:-8.2,y3:-21.3,y5:-13.8},
+  "פיקדון בנקאי ישראל":       {ic:"🏦",cat:"חיסכון",ytd:1.9,y2025:4.6,y3:4.1,y5:16.8},
+  "קרן כספית שקלית":          {ic:"💵",cat:"חיסכון",ytd:1.8,y2025:4.3,y3:3.8,y5:15.2},
+  "פנסיה מסלול כללי":         {ic:"👴",cat:"חיסכון",ytd:2.4,y2025:9.1,y3:8.2,y5:34.6},
+  "קרן השתלמות מסלול מנייתי": {ic:"🎓",cat:"חיסכון",ytd:3.1,y2025:28.7,y3:34.1,y5:82.3},
+  "זהב":                      {ic:"🥇",cat:"סחורות",ytd:11.2,y2025:27.2,y3:53.8,y5:89.1},
+  "נפט (WTI)":                {ic:"🛢️",cat:"סחורות",ytd:-6.3,y2025:-10.7,y3:-11.8,y5:13.7},
+  "Bitcoin (BTC)":            {ic:"₿",cat:"קריפטו",ytd:-14.8,y2025:118.4,y3:91.2,y5:762.4},
+  "Ethereum (ETH)":           {ic:"Ξ",cat:"קריפטו",ytd:-31.2,y2025:43.7,y3:18.4,y5:298.7},
+};
+
+// national averages including new categories
+const AVG={housing:4200,food:2800,transport:580,education:420,
+           telecom:380,insurance:680,health:420,entertainment:550,clothing:380,misc:800};
+
+let kids=0,cur=null,prev=null,selIdx="S&P 500",selPer="y2025",customInvAmt=0;
+
+const ils=n=>"₪"+Math.abs(Math.round(n)).toLocaleString("he-IL");
+const pct=n=>(n>0?"+":"")+n.toFixed(1)+"%";
+const pos=n=>n>=0?"var(--green)":"var(--red)";
+const posGlow=n=>n>=0?"var(--green-glow)":"var(--red-glow)";
+
+function pickKids(b){
+  document.querySelectorAll(".kid-btn").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); kids=parseInt(b.dataset.val)||0;
+}
+function grossNet(g){
+  if(g<=7010)return g*.90; if(g<=10060)return g*.84; if(g<=16150)return g*.79;
+  if(g<=21440)return g*.73; if(g<=44510)return g*.68; return g*.62;
+}
+
+function barHTML(lbl,val,avg,max,col,glow){
+  const p=Math.min(val/max*100,100),ap=Math.min(avg/max*100,100);
+  const d=val>avg
+    ?`<span style="color:var(--red)"> ▲ ${ils(val-avg)} מעל</span>`
+    :`<span style="color:var(--green)"> ▼ ${ils(avg-val)} מתחת</span>`;
+  return`<div class="bar-r">
+    <div class="bar-top"><span class="bar-lbl">${lbl}</span>
+      <span class="bar-v" style="color:${col};text-shadow:0 0 8px ${glow}">${ils(val)}</span></div>
+    <div class="bar-track">
+      <div class="bar-fill" style="width:${p}%;background:linear-gradient(90deg,${col}aa,${col});box-shadow:0 0 8px ${glow}"></div>
+      <div class="bar-avg" style="left:${ap}%"></div>
+    </div>
+    <div class="bar-note">ממוצע ארצי: ${ils(avg)}${d}</div>
+  </div>`;
+}
+
+function gaugeHTML(p,col,glow){
+  const R=38,cx=48,cy=48,C=2*Math.PI*R,d=(Math.min(Math.max(p,0),100)/100)*C;
+  return`<svg width="96" height="96" viewBox="0 0 96 96">
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="8"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${col}" stroke-width="8"
+      stroke-dasharray="${d} ${C}" stroke-linecap="round" transform="rotate(-90 48 48)"
+      filter="drop-shadow(0 0 6px ${glow})"
+      style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1)"/>
+    <text x="${cx}" y="${cy+6}" text-anchor="middle" fill="${col}" class="g-txt"
+      style="filter:drop-shadow(0 0 6px ${glow})">${Math.round(p)}%</text>
+  </svg>`;
+}
+
+function expCard(r){
+  let ch="";
+  if(prev){
+    const d=r.total-prev.total,col=d>0?"var(--red)":"var(--green)";
+    const glow=d>0?"var(--red-glow)":"var(--green-glow)",s=d>=0?"▲":"▼";
+    ch=`<div style="display:flex;justify-content:space-between;align-items:center;
+      padding:9px 12px;background:${d>0?"rgba(255,59,92,.07)":"rgba(0,255,170,.06)"};
+      border-radius:9px;margin-bottom:10px;
+      border:1px solid ${d>0?"rgba(255,59,92,.25)":"rgba(0,255,170,.2)"};
+      box-shadow:0 0 10px ${d>0?"rgba(255,59,92,.05)":"rgba(0,255,170,.05)"}">
+      <span style="font-size:11px;color:rgba(10,20,50,.82);font-weight:600">שינוי מחישוב קודם</span>
+      <span style="font-size:14px;font-weight:900;color:${col};text-shadow:0 0 8px ${glow}">${s} ${ils(Math.abs(d))}</span>
+    </div>`;
+  }
+  // all expense fields including new ones
+  const fields=[
+    ["🏠 מגורים","ei-h",r.housing],["🛒 מזון","ei-f",r.food],
+    ["🚗 תחבורה","ei-t",r.transport],["🎓 חינוך","ei-e",r.educ],
+    ["📱 תקשורת","ei-tc",r.telecom],["🛡️ ביטוחים","ei-ins",r.insurance],
+    ["🏥 בריאות","ei-hlt",r.health],["🎬 בידור ופנאי","ei-ent",r.entertainment],
+    ["👔 לבוש והנעלה","ei-cl",r.clothing],["🎭 שונות","ei-m",r.misc],
+  ].map(([l,id,v])=>`<div class="ei-row"><label>${l}</label><input type="number" id="${id}" value="${v}"/></div>`).join("");
+  return`<div class="gcard sub-card" style="margin-top:0">
+    <div class="sc-title">✏️ עדכן הוצאות ידנית</div>
+    ${ch}${fields}
+    <button class="update-btn" onclick="applyCustom()">↻ עדכן חישוב</button>
+  </div>`;
+}
+
+function idxCard(inv){
+  const idx=IDX[selIdx];
+  const pers=["ytd","y2025","y3","y5"],labs={ytd:"2026 YTD",y2025:"2025",y3:"3 שנים",y5:"5 שנים"};
+  const tabs=pers.map(p=>`<button class="p-tab${selPer===p?" on":""}" onclick="setPer('${p}')">${labs[p]}</button>`).join("");
+  const cats=[...new Set(Object.values(IDX).map(v=>v.cat))];
+  const opts=cats.map(c=>{
+    const its=Object.keys(IDX).filter(k=>IDX[k].cat===c)
+      .map(k=>`<option value="${k}"${k===selIdx?" selected":""}>${IDX[k].ic} ${k}</option>`).join("");
+    return`<optgroup label="${c}">${its}</optgroup>`;
+  }).join("");
+  const cells=pers.map(p=>{
+    const rate=idx[p]/100,g=Math.round(inv*rate);
+    return`<div class="ret-cell${selPer===p?" sel":""}">
+      <div class="ret-p">${labs[p]}</div>
+      <div class="ret-pct" style="color:${pos(idx[p])};text-shadow:0 0 8px ${posGlow(idx[p])}">${pct(idx[p])}</div>
+      <div class="ret-amt" style="color:${pos(g)}">${g>=0?"+":""}${ils(Math.abs(g))}</div>
+    </div>`;
+  }).join("");
+  return`<div class="gcard sub-card">
+    <div class="sc-title">📊 בחר מדד להשוואה</div>
+    <select class="idx-select" onchange="setIdx(this.value)">${opts}</select>
+    <div class="period-row">${tabs}</div>
+    <div class="ret-grid">${cells}</div>
+  </div>`;
+}
+
+function applyCustom(){
+  if(!cur)return;
+  const gv=id=>{const v=parseInt(document.getElementById(id)?.value);return isNaN(v)?0:v;};
+  const h=gv("ei-h")||cur.housing, f=gv("ei-f")||cur.food,
+        t=gv("ei-t")||cur.transport, e=gv("ei-e"),
+        tc=gv("ei-tc")||cur.telecom, ins=gv("ei-ins")||cur.insurance,
+        hlt=gv("ei-hlt")||cur.health, ent=gv("ei-ent")||cur.entertainment,
+        cl=gv("ei-cl")||cur.clothing, m=gv("ei-m")||cur.misc;
+  prev={...cur};
+  const tot=h+f+t+e+tc+ins+hlt+ent+cl+m, disp=cur.inc-tot;
+  const na=AVG.housing+(AVG.food+cur.k*200)+AVG.transport+(AVG.education+cur.k*180)+
+           AVG.telecom+AVG.insurance+AVG.health+AVG.entertainment+AVG.clothing+AVG.misc;
+  cur={...cur,housing:h,food:f,transport:t,educ:e,telecom:tc,insurance:ins,health:hlt,
+       entertainment:ent,clothing:cl,misc:m,total:tot,disposable:disp,overAvg:tot-na,investable:Math.max(disp,0)};
+  render(cur);
+}
+function setIdx(v){selIdx=v;render(cur);}
+function setPer(p){selPer=p;render(cur);}
+
+function compute(){
+  const gross=parseInt(document.getElementById("salary").value)||0;
+  const city=document.getElementById("city").value;
+  if(!gross||!city){alert("נא להכניס הכנסה ועיר");return;}
+  const inc=Math.round(grossNet(gross)),k=kids,cd=CITY[city];
+  const food=(cd.f||800)+k*380, housing=cd.h, transport=(cd.t||500)+k*120;
+  const educ=k*620;
+  const telecom=350+k*80, insurance=600+k*120, health=350+k*80,
+        entertainment=480+k*60, clothing=320+k*50, misc=600+k*120;
+  const total=food+housing+transport+educ+telecom+insurance+health+entertainment+clothing+misc;
+  const disp=inc-total;
+  const na=AVG.housing+(AVG.food+k*200)+AVG.transport+(AVG.education+k*180)+
+           AVG.telecom+AVG.insurance+AVG.health+AVG.entertainment+AVG.clothing+AVG.misc;
+  prev=cur?{...cur}:null;
+  cur={gross,inc,k,food,housing,transport,educ,telecom,insurance,health,entertainment,clothing,misc,
+       total,disposable:disp,overAvg:total-na,investable:Math.max(disp,0)};
+  render(cur);
+}
+
+function render(r){
+  const {gross,inc,k,food,housing,transport,educ,telecom,insurance,health,entertainment,clothing,misc,
+         total,disposable:disp,overAvg,investable}=r;
+  const dpct=Math.min(100,Math.max(0,disp/inc*100));
+  const stCol=dpct>20?"var(--green)":dpct>5?"var(--amber)":"var(--red)";
+  const stGlow=dpct>20?"var(--green-glow)":dpct>5?"var(--amber-glow)":"var(--red-glow)";
+  const stLbl=dpct>20?"🟢 מצב פיננסי טוב":dpct>5?"🟡 מצב פיננסי בסיסי":"🔴 לחץ פיננסי גבוה";
+  const c1=overAvg>0?"var(--red)":"var(--green)";
+  const g1=overAvg>0?"var(--red-glow)":"var(--green-glow)";
+  const c2=disp<0?"var(--red)":disp<2000?"var(--amber)":"var(--green)";
+  const g2=disp<0?"var(--red-glow)":disp<2000?"var(--amber-glow)":"var(--green-glow)";
+  const idx=IDX[selIdx],rate=idx[selPer]/100,gain=Math.round(investable*rate);
+  const c3=gain>=0?"var(--amber)":"var(--red)";
+  const g3=gain>=0?"var(--amber-glow)":"var(--red-glow)";
+  const perLbl={ytd:"2026 YTD",y2025:"שנת 2025",y3:"3 שנים",y5:"5 שנים"}[selPer];
+
+  const cheapest=CHAINS.reduce((a,b)=>a.f<b.f?a:b);
+  const tierCol={זול:"var(--green)",בינוני:"var(--blue)",בסיס:"var(--mut2)",יקר:"var(--red)"};
+  const tierGlow={זול:"var(--green-glow)",בינוני:"var(--blue-glow)",בסיס:"transparent",יקר:"var(--red-glow)"};
+  const chains=CHAINS.map((ch,i)=>{
+    const cost=Math.round(food*ch.f),diff=cost-food;
+    const dc=ch.n==="שופרסל"?`<span style="color:rgba(10,20,50,.55)">בסיס</span>`
+      :diff<0?`<span style="color:var(--green);text-shadow:0 0 6px var(--green-glow)">חוסך ${ils(Math.abs(diff))}</span>`
+      :`<span style="color:var(--red)">+${ils(diff)}</span>`;
+    const tc=tierCol[ch.tier]||"var(--mut2)";
+    return`<div class="chain-r${ch===cheapest?" cheapest":""}">
+      <span class="ch-num">${i+1}</span>
+      <span class="ch-name">${ch.n}<span style="font-size:9px;font-weight:800;padding:2px 6px;
+        border-radius:4px;background:${tc}18;color:${tc};margin-right:5px;
+        box-shadow:0 0 4px ${tierGlow[ch.tier]||"transparent"}">${ch.tier}</span></span>
+      <span class="ch-price" style="color:${diff<0?"var(--green)":diff>0?"var(--red)":"var(--text)"}">${ils(cost)}</span>
+      <span class="ch-diff">${dc}</span>
+    </div>`;
+  }).join("");
+  const saving=Math.round(food*(1-cheapest.f));
+
+  const invests=INVEST.map(t=>{
+    const base = customInvAmt > 0 ? customInvAmt : investable;
+    const g=Math.round(base*t.a),neg=g<0;
+    const riskCol={
+      "גבוה מאוד":"var(--red)","גבוה":"var(--amber)","בינוני-גבוה":"var(--amber)",
+      "בינוני":"var(--blue)","נמוך-בינוני":"var(--green)","נמוך":"var(--green)",
+      "נמוך מאוד":"var(--green)","ללא":"var(--mut2)","הפסד ריאלי":"var(--red)"
+    }[t.risk]||"var(--mut2)";
+    const col=neg?"var(--red)":t.cat==="קריפטו"?"var(--purple)":t.top?"var(--amber)":"var(--green)";
+    const glow=neg?"var(--red-glow)":t.cat==="קריפטו"?"rgba(168,85,247,.35)":t.top?"var(--amber-glow)":"var(--green-glow)";
+    const catBg={"מניות":"rgba(0,184,255,.1)","קריפטו":"rgba(168,85,247,.12)","אג\"ח":"rgba(0,255,170,.08)","חיסכון":"rgba(255,176,32,.08)","סחורות":"rgba(255,176,32,.1)","מזומן":"rgba(255,59,92,.08)"}[t.cat]||"rgba(255,255,255,.05)";
+    const catTxt={"מניות":"var(--blue)","קריפטו":"var(--purple)","אג\"ח":"var(--green)","חיסכון":"var(--amber)","סחורות":"var(--amber)","מזומן":"var(--red)"}[t.cat]||"var(--mut2)";
+    return`<div class="inv-r${t.top?" top":""}">
+      <span class="inv-ic">${t.ic}</span>
+      <span class="inv-name">${t.n}
+        <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${catBg};color:${catTxt};font-weight:800;margin-right:4px">${t.cat}</span>
+      </span>
+      <div style="text-align:left;flex-shrink:0">
+        <div class="inv-gain" style="color:${col};text-shadow:0 0 8px ${glow}">${neg?"−":"+"}${ils(Math.abs(g))}</div>
+        <div class="inv-rate">
+          ${(t.a*100).toFixed(1)}% · <span style="color:${riskCol};font-size:9px">${t.risk}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  // ── PENSION ANALYSIS ──────────────────────────────────────────
+  const pensionRate=0.185; // employer+employee 18.5%
+  const pensionMonthly=Math.round(inc*pensionRate);
+  const pensionAnnual=pensionMonthly*12;
+  const retirementTarget=inc*12*20; // 20 years of income
+  const yearsToRetire=35;
+  const pensionProjected=Math.round(pensionAnnual*yearsToRetire*1.045); // ~4.5% real growth
+  const pensionCoverage=Math.round(pensionProjected/retirementTarget*100);
+
+  // ── EMERGENCY FUND ────────────────────────────────────────────
+  const efTarget=total*6;
+  const efNote=disp>0?`בקצב החיסכון הנוכחי תצבור קרן חירום של 6 חודשות בעוד ${Math.ceil(efTarget/Math.max(disp,1))} חודשים`:"לחץ פיננסי — קשה לבנות קרן חירום כרגע";
+
+  // ── HOUSING AFFORDABILITY ─────────────────────────────────────
+  const housePctInc=Math.round(housing/inc*100);
+  const recHousePct=30; // recommended max
+  const annualSavings=Math.max(disp*12,0);
+  const avgAprtPrice=CITY[document.getElementById('city').value]?.h*120||2100000;
+  const downPayment=Math.round(avgAprtPrice*0.25);
+  const yearsToDown=annualSavings>0?Math.ceil(downPayment/annualSavings):999;
+
+  // ── SINGLES vs FAMILY TIPS ────────────────────────────────────
+  const singleTips=k===0?[
+    {icon:"🏠",tip:"רווק? שקול שותפות דירה — חיסכון של עד 40% בדיור"},
+    {icon:"🚗",tip:"רכב לרווק עולה כ-₪1,500/חודש — שקול תחבורה ציבורית+אופניים"},
+    {icon:"🎓",tip:"קרן השתלמות לעצמאי — חיסכון פטור ממס עד ₪20,520/שנה"},
+    {icon:"💊",tip:"ביטוח בריאות פרטי לרווקים — כ-₪150/חודש בלבד"},
+    {icon:"✈️",tip:"חופשות לרווקים: 30% זול יותר — נסיעה סולו/חברים"},
+  ]:[
+    {icon:"👶",tip:`${k} ילדים = נקודות זיכוי במס: ${k<=2?k*2.25:k*2.25} נק' = חיסכון של כ-${ils(k*Math.min(k,3)*220)}/חודש`},
+    {icon:"🏫",tip:`קצבת ילדים: ${ils(k<=2?k*193:k<=4?193*2+(k-2)*465:193*2+465*2+(k-4)*534)}/חודש מביטוח לאומי`},
+    {icon:"🏠",tip:"משפחה עם ילדים — ₪2,500 מענק לרכישת דירה ראשונה (זכאים)"},
+    {icon:"🛡️",tip:"ביטוח חיים הכרחי עם ילדים — כ-₪150/חודש ל-500K ₪"},
+    {icon:"🎓",tip:"חשבון חיסכון לילד — ₪55/חודש מהמדינה עד גיל 18"},
+  ];
+
+  // expense breakdown for mini-rows
+  const expItems=[
+    ["🏠 מגורים",housing,"var(--blue)","var(--blue-glow)"],
+    ["🛒 מזון",food,"var(--green)","var(--green-glow)"],
+    ["🚗 תחבורה",transport,"var(--amber)","var(--amber-glow)"],
+    ["🎓 חינוך",educ,"var(--purple)","rgba(168,85,247,.3)"],
+    ["📱 תקשורת",telecom,"var(--blue)","var(--blue-glow)"],
+    ["🛡️ ביטוחים",insurance,"var(--coral)","rgba(255,107,53,.3)"],
+    ["🏥 בריאות",health,"var(--pink)","rgba(244,114,182,.3)"],
+    ["🎬 בידור ופנאי",entertainment,"var(--green)","var(--green-glow)"],
+    ["👔 לבוש והנעלה",clothing,"var(--amber)","var(--amber-glow)"],
+    ["🎭 שונות",misc,"rgba(180,200,230,.6)","transparent"],
+  ].map(([l,v,c,gw])=>
+    `<div class="mini-row"><span class="mini-lbl">${l}</span>
+     <span class="mini-v" style="color:${c};text-shadow:0 0 6px ${gw}">${ils(v)}</span></div>`
+  ).join("");
+
+  document.getElementById("results-area").innerHTML=`
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+  <div class="hero-row">
+    <div class="hero-col">
+      <div class="gcard hero-card" style="border-top:3px solid ${c1};box-shadow:0 0 24px ${g1},0 4px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04)">
+        <div class="hc-top">
+          <div class="hc-icon-wrap" style="background:${c1}18;border:1px solid ${c1}33;box-shadow:0 0 12px ${g1}">💸</div>
+          <div class="hc-badge" style="background:${c1}18;color:${c1};border:1px solid ${c1}33">${overAvg>0?"מעל ממוצע":"מתחת לממוצע"}</div>
+        </div>
+        <div class="hc-val" style="color:${c1};text-shadow:0 0 16px ${g1}">${ils(total)}</div>
+        <div class="hc-label">הוצאות חודשיות</div>
+        <div class="hc-sub" style="color:${c1}">${overAvg>0?`▲ ${ils(overAvg)} מעל הממוצע`:`▼ ${ils(Math.abs(overAvg))} מתחת לממוצע`}</div>
+        <div class="hc-strip" style="background:linear-gradient(90deg,${c1},transparent);box-shadow:0 0 8px ${g1}"></div>
+      </div>
+      ${expCard(r)}
+    </div>
+
+    <div class="hero-col">
+      <div class="gcard hero-card" style="border-top:3px solid ${c2};box-shadow:0 0 24px ${g2},0 4px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04)">
+        <div class="hc-top">
+          <div class="hc-icon-wrap" style="background:${c2}18;border:1px solid ${c2}33;box-shadow:0 0 12px ${g2}">🏦</div>
+          <div class="hc-badge" style="background:${c2}18;color:${c2};border:1px solid ${c2}33">${disp<0?"גירעון!":disp<2000?"בסיסי":"יש לנהל"}</div>
+        </div>
+        <div class="hc-val" style="color:${c2};text-shadow:0 0 16px ${g2}">${ils(disp)}</div>
+        <div class="hc-label">נשאר בסוף חודש (נטו)</div>
+        <div class="hc-sub" style="color:${c2}">${disp<0?"⚠️ גירעון חודשי!":disp<2000?"מעט מאוד פנוי":"יש מה לנהל"}</div>
+        <div class="hc-net">ברוטו ${ils(gross)} → נטו ~${ils(inc)}</div>
+        <div class="hc-strip" style="background:linear-gradient(90deg,${c2},transparent);box-shadow:0 0 8px ${g2}"></div>
+      </div>
+      <div class="gcard sub-card">
+        <div class="sc-title">📋 פירוט כל ההוצאות</div>
+        ${expItems}
+      </div>
+    </div>
+
+    <div class="hero-col">
+      <div class="gcard hero-card" style="border-top:3px solid ${c3};box-shadow:0 0 24px ${g3},0 4px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04)">
+        <div class="hc-top">
+          <div class="hc-icon-wrap" style="background:${c3}18;border:1px solid ${c3}33;box-shadow:0 0 12px ${g3}">📈</div>
+          <div class="hc-badge" style="background:${c3}18;color:${c3};border:1px solid ${c3}33">${perLbl}</div>
+        </div>
+        <div class="hc-val" style="color:${c3};text-shadow:0 0 16px ${g3}">${gain>=0?"+":""}${ils(Math.abs(gain))}</div>
+        <div class="hc-label">רווח פוטנציאלי</div>
+        <div class="hc-sub" style="color:${c3}">${idx.ic} ${selIdx} · ${pct(idx[selPer])}</div>
+        <div class="hc-strip" style="background:linear-gradient(90deg,${c3},transparent);box-shadow:0 0 8px ${g3}"></div>
+      </div>
+      ${idxCard(investable)}
+    </div>
+  </div>
+
+  <div class="gcard sec-card neon-blue">
+    <div class="sec-head">
+      <div class="sec-dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue-glow)"></div>
+      <span class="sec-title" style="color:var(--blue)">פירוט הוצאות לעומת ממוצע ארצי</span>
+    </div>
+    <div class="bars-2">
+      ${barHTML("🏠 מגורים",housing,AVG.housing,9000,"var(--blue)","var(--blue-glow)")}
+      ${barHTML("🛒 מזון",food,AVG.food+k*200,5000,"var(--green)","var(--green-glow)")}
+      ${barHTML("🚗 תחבורה",transport,AVG.transport,2000,"var(--amber)","var(--amber-glow)")}
+      ${barHTML("🎓 חינוך",educ,AVG.education+k*180,3500,"var(--purple)","rgba(168,85,247,.3)")}
+      ${barHTML("📱 תקשורת",telecom,AVG.telecom,1200,"var(--blue)","var(--blue-glow)")}
+      ${barHTML("🛡️ ביטוחים",insurance,AVG.insurance,2000,"var(--coral)","rgba(255,107,53,.3)")}
+      ${barHTML("🏥 בריאות",health,AVG.health,1500,"var(--pink)","rgba(244,114,182,.3)")}
+      ${barHTML("🎬 בידור ופנאי",entertainment,AVG.entertainment,2000,"var(--green)","var(--green-glow)")}
+    </div>
+    <div class="bar-legend"><div class="bar-leg-dot"></div><span class="bar-leg-t">קו כתום = ממוצע ארצי</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="gcard sec-card neon-green">
+      <div class="sec-head">
+        <div class="sec-dot" style="background:var(--green)"></div>
+        <span class="sec-title" style="color:var(--green)">חיסכון לפי רשת סופר (${CHAINS.length} רשתות)</span>
+      </div>
+      <div style="max-height:320px;overflow-y:auto;padding-left:2px">${chains}</div>
+      <div class="save-banner">💡 מעבר ל${cheapest.n} = <span style="color:var(--green)">${ils(saving)}/חודש</span> · ${ils(saving*12)}/שנה</div>
+    </div>
+    <div class="gcard sec-card neon-amber">
+      <div class="sec-head">
+        <div class="sec-dot" style="background:var(--amber)"></div>
+        <span class="sec-title" style="color:var(--amber)">מה עושה הכסף שלך לשנה?</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:rgba(255,176,32,.07);border:1px solid rgba(255,176,32,.2);border-radius:11px;">
+        <span style="font-size:12px;color:rgba(10,20,50,.88);font-weight:600;white-space:nowrap">סכום להשקעה:</span>
+        <input type="number" id="customInvInput" placeholder="${investable > 0 ? investable : 10000}"
+          value="${customInvAmt > 0 ? customInvAmt : (investable > 0 ? investable : '')}"
+          style="flex:1;padding:8px 10px;border-radius:9px;border:1px solid rgba(255,176,32,.35);background:rgba(255,176,32,.06);color:#fff;font-size:14px;font-weight:800;font-family:inherit;outline:none;direction:ltr;"
+          oninput="customInvAmt=parseInt(this.value)||0;render(cur)"/>
+        <span style="font-size:13px;font-weight:800;color:var(--amber)">₪</span>
+        ${investable > 0 ? `<button onclick="customInvAmt=0;document.getElementById('customInvInput').value=${investable};render(cur)" style="font-size:10px;padding:5px 10px;border-radius:7px;border:1px solid rgba(255,176,32,.3);background:transparent;color:rgba(255,176,32,.7);cursor:pointer;font-family:inherit;font-weight:700;white-space:nowrap">עודף חודשי</button>` : ''}
+      </div>
+      <div style="max-height:370px;overflow-y:auto;padding-left:2px">${invests}</div>
+      ${investable<=0&&customInvAmt<=0?`<div style="margin-top:10px;padding:11px 13px;background:rgba(255,59,92,.07);border:1px solid rgba(255,59,92,.25);border-radius:10px;font-size:12px;color:var(--red);font-weight:700;">⚠️ הכנס סכום ידנית למעלה לחישוב</div>`:""}
+    </div>
+  </div>
+
+  <!-- ── NEW INSIGHT SECTIONS ───────────────────────────────── -->
+
+  <!-- PENSION + EMERGENCY ROW -->
+  <div class="two-col" style="margin-top:16px">
+    <div class="gcard sec-card" style="border-color:rgba(168,85,247,.25);box-shadow:0 0 20px rgba(168,85,247,.08),0 4px 24px rgba(0,0,0,.3)">
+      <div class="sec-head">
+        <div class="sec-dot" style="background:var(--purple)"></div>
+        <span class="sec-title" style="color:var(--purple)">ניתוח פנסיה</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.2);border-radius:11px;margin-bottom:10px">
+        <span style="font-size:12px;color:rgba(10,20,50,.88);font-weight:600">הפרשה חודשית (18.5%)</span>
+        <span style="font-size:16px;font-weight:900;color:var(--purple);text-shadow:0 0 10px rgba(168,85,247,.4)">${ils(pensionMonthly)}</span>
+      </div>
+      <div class="mini-row"><span class="mini-lbl">הצטברות שנתית</span><span class="mini-v" style="color:var(--purple)">${ils(pensionAnnual)}</span></div>
+      <div class="mini-row"><span class="mini-lbl">תחזית לגיל 67 (35 שנה)</span><span class="mini-v" style="color:var(--purple)">${ils(pensionProjected)}</span></div>
+      <div class="mini-row"><span class="mini-lbl">יעד פרישה (~20 שנות שכר)</span><span class="mini-v" style="color:rgba(220,235,255,.75)">${ils(retirementTarget)}</span></div>
+      <div style="margin-top:10px;padding:9px 12px;border-radius:9px;background:${pensionCoverage>=80?"rgba(0,255,170,.07)":pensionCoverage>=50?"rgba(255,176,32,.07)":"rgba(255,59,92,.07)"};border:1px solid ${pensionCoverage>=80?"rgba(0,255,170,.2)":pensionCoverage>=50?"rgba(255,176,32,.2)":"rgba(255,59,92,.2)"}">
+        <span style="font-size:12px;font-weight:700;color:${pensionCoverage>=80?"var(--green)":pensionCoverage>=50?"var(--amber)":"var(--red)"}">
+          ${pensionCoverage>=80?"✅":"⚠️"} כיסוי פנסיוני: ${pensionCoverage}% מהיעד
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div id="verdict">
+    ${gaugeHTML(dpct,stCol,stGlow)}
+    <div class="v-text">
+      <h3 style="color:${stCol};text-shadow:0 0 12px ${stGlow}">${stLbl}</h3>
+      <p>הוצאותיך מהוות <strong style="color:var(--text)">${Math.round(total/inc*100)}%</strong> מהכנסתך.
+      ${overAvg>0?`אתה משלם ${ils(overAvg)} מעל הממוצע הארצי — ${ils(overAvg*12)} בשנה.`
+               :`אתה מתחת לממוצע ב-${ils(Math.abs(overAvg))} — כל הכבוד!`}
+      ${saving>0?` מעבר לרשת זולה יחסוך עוד ${ils(saving)}/חודש.`:""}</p>
+    </div>
+  </div>
+
+  </div>`;
+}
+// ── TICKER ENGINE ──────────────────────────────────────────────
+// 150+ static items — always running, never empty
+const TICKER_BANK = [
+  // 🏠 דיור ושכ"ד
+  {icon:"🏠",text:"שכר דירה ממוצע — תל אביב",val:"₪7,100/חודש",cls:"dn"},
+  {icon:"🏠",text:"שכר דירה ממוצע — ירושלים",val:"₪5,300/חודש",cls:"dn"},
+  {icon:"🏠",text:"שכר דירה ממוצע — חיפה",val:"₪3,900/חודש",cls:"neu"},
+  {icon:"🏠",text:"שכר דירה ממוצע — באר שבע",val:"₪2,900/חודש",cls:"up"},
+  {icon:"🏠",text:"שכר דירה ממוצע — נתניה",val:"₪4,300/חודש",cls:"neu"},
+  {icon:"🏡",text:"מחיר דירה ממוצע בישראל",val:"₪2.1M",cls:"dn"},
+  {icon:"🏡",text:"מחיר דירה ממוצע — תל אביב",val:"₪4.2M",cls:"dn"},
+  {icon:"🏡",text:"מחיר דירה ממוצע — ירושלים",val:"₪3.1M",cls:"dn"},
+  {icon:"🏡",text:"מחיר דירה ממוצע — פריפריה",val:"₪1.1M",cls:"up"},
+  {icon:"📐",text:"עלות בנייה למ\"ר — ממוצע",val:"₪7,500",cls:"dn"},
+  {icon:"🔑",text:"תשואה שכירות — תל אביב",val:"2.4%",cls:"dn"},
+  {icon:"🔑",text:"תשואה שכירות — ב\"ש ואשקלון",val:"4.8%",cls:"up"},
+  {icon:"🏗️",text:"היתרי בנייה שנפתחו ב-2025",val:"55,000 יח'",cls:"up"},
+  {icon:"📉",text:"עסקאות נדל\"ן — ירידה שנתית",val:"-8%",cls:"dn"},
+  // 🛒 מזון וצריכה
+  {icon:"🛒",text:"אינפלציה כוללת — ינואר 2026",val:"+3.4%",cls:"neu"},
+  {icon:"🥖",text:"לחם תקן — מחיר מפוקח",val:"₪7.80",cls:"neu"},
+  {icon:"🥛",text:"חלב 3% — מחיר מפוקח",val:"₪5.90/ליטר",cls:"neu"},
+  {icon:"🧀",text:"גבינה צהובה — ממוצע",val:"₪55/ק\"ג",cls:"dn"},
+  {icon:"🥚",text:"ביצים תקן 12 — ממוצע",val:"₪14.90",cls:"dn"},
+  {icon:"🍗",text:"חזה עוף — ממוצע שוק",val:"₪38/ק\"ג",cls:"dn"},
+  {icon:"🥩",text:"אנטריקוט — ממוצע",val:"₪130/ק\"ג",cls:"dn"},
+  {icon:"🍞",text:"עלות סל מזון חודשי למשפחה",val:"₪2,800",cls:"dn"},
+  {icon:"🫒",text:"שמן זית — ממוצע",val:"₪48/ליטר",cls:"dn"},
+  {icon:"🍅",text:"מחיר ירקות — עלה ב-2025",val:"+12%",cls:"dn"},
+  {icon:"🍋",text:"פירות — עלו ב-2025",val:"+9%",cls:"dn"},
+  {icon:"☕",text:"קפה בוטיק בבית קפה",val:"₪18–22",cls:"neu"},
+  {icon:"🍕",text:"ארוחת ערב במסעדה — לאדם",val:"₪95–130",cls:"dn"},
+  {icon:"🍔",text:"ארוחת עסקים — ממוצע",val:"₪65",cls:"neu"},
+  {icon:"🥗",text:"סלט + שתייה ברחוב",val:"₪45",cls:"neu"},
+  {icon:"🧴",text:"מוצרי ניקיון חודשיים",val:"₪280",cls:"neu"},
+  // ⛽ דלק ותחבורה
+  {icon:"⛽",text:"דלק 95 — מחיר ממוצע",val:"₪6.97/ליטר",cls:"dn"},
+  {icon:"⛽",text:"דלק 98 — מחיר ממוצע",val:"₪7.35/ליטר",cls:"dn"},
+  {icon:"🔋",text:"טעינת רכב חשמלי — ממוצע",val:"₪0.55/kWh",cls:"up"},
+  {icon:"🚗",text:"עלות אחזקת רכב שנתית",val:"₪18,000",cls:"dn"},
+  {icon:"🚗",text:"ביטוח חובה — ממוצע שנתי",val:"₪1,800",cls:"dn"},
+  {icon:"🚗",text:"ביטוח מקיף — ממוצע שנתי",val:"₪4,200",cls:"dn"},
+  {icon:"🔧",text:"טיפול שנתי רכב — ממוצע",val:"₪1,200",cls:"neu"},
+  {icon:"🅿️",text:"חניה עירונית — תל אביב/שעה",val:"₪8.50",cls:"dn"},
+  {icon:"🚌",text:"חופשי חודשי תחבורה ציבורית",val:"₪225",cls:"up"},
+  {icon:"🚇",text:"נסיעה ברכבת — ממוצע",val:"₪18",cls:"neu"},
+  {icon:"🚖",text:"נסיעת מונית — ממוצע עירוני",val:"₪45",cls:"dn"},
+  {icon:"🛵",text:"מנוי אופניים/קורקינט חשמלי",val:"₪89/חודש",cls:"up"},
+  // 💡 אנרגיה ותשתיות
+  {icon:"💡",text:"חשמל — דירה 4 חדרים/חודש",val:"₪450",cls:"dn"},
+  {icon:"💡",text:"מחיר חשמל לצרכן",val:"₪0.58/kWh",cls:"dn"},
+  {icon:"💧",text:"מים — ממוצע חודשי לדירה",val:"₪95",cls:"neu"},
+  {icon:"🌡️",text:"גז לבישול — גליל 12 ק\"ג",val:"₪98",cls:"neu"},
+  {icon:"♻️",text:"ארנונה ממוצעת — ישראל",val:"₪780/חודש",cls:"dn"},
+  {icon:"♻️",text:"ארנונה — תל אביב 4 חד'",val:"₪1,100/חודש",cls:"dn"},
+  {icon:"♻️",text:"ארנונה — פריפריה ממוצע",val:"₪520/חודש",cls:"up"},
+  // 📱 תקשורת
+  {icon:"📱",text:"חבילת סלולר בסיסית",val:"₪19/חודש",cls:"up"},
+  {icon:"📱",text:"חבילת סלולר ממוצעת",val:"₪45/חודש",cls:"neu"},
+  {icon:"📱",text:"iPhone 16 — מחיר התחלתי",val:"₪4,299",cls:"dn"},
+  {icon:"🔌",text:"אינטרנט בית — 200Mbps",val:"₪89/חודש",cls:"up"},
+  {icon:"🔌",text:"אינטרנט בית — 1Gbps",val:"₪119/חודש",cls:"neu"},
+  {icon:"📺",text:"מנוי נטפליקס",val:"₪60/חודש",cls:"neu"},
+  {icon:"🎵",text:"מנוי ספוטיפיי",val:"₪26/חודש",cls:"neu"},
+  {icon:"☁️",text:"מנוי iCloud 200GB",val:"₪13.90/חודש",cls:"neu"},
+  // 🏥 בריאות וביטוח
+  {icon:"🏥",text:"ביקור רופא — השתתפות עצמית",val:"₪35",cls:"neu"},
+  {icon:"🏥",text:"ביקור רופא מומחה — פרטי",val:"₪350–600",cls:"dn"},
+  {icon:"💊",text:"מרשם תרופות — השתתפות עצמית",val:"₪11",cls:"neu"},
+  {icon:"🦷",text:"טיפול שיניים — עקירה",val:"₪280",cls:"dn"},
+  {icon:"🦷",text:"כתר שיני — ממוצע",val:"₪3,200",cls:"dn"},
+  {icon:"👁️",text:"בדיקת עיניים + משקפיים",val:"₪900–1,500",cls:"dn"},
+  {icon:"🏋️",text:"מנוי חדר כושר — ממוצע",val:"₪200/חודש",cls:"neu"},
+  {icon:"🧘",text:"שיעור יוגה/פילאטיס",val:"₪60–80/שיעור",cls:"neu"},
+  {icon:"🛡️",text:"ביטוח חיים — 500K ₪",val:"₪150/חודש",cls:"neu"},
+  {icon:"🛡️",text:"ביטוח דירה — ממוצע",val:"₪180/חודש",cls:"neu"},
+  {icon:"🛡️",text:"ביטוח בריאות פרטי",val:"₪350/חודש",cls:"dn"},
+  // 🎓 חינוך
+  {icon:"🎓",text:"גן חובה ציבורי — עלות הורים",val:"₪900/חודש",cls:"dn"},
+  {icon:"🎓",text:"גן פרטי — ממוצע",val:"₪2,800/חודש",cls:"dn"},
+  {icon:"📚",text:"חוגים לילד — ממוצע",val:"₪380/חודש",cls:"dn"},
+  {icon:"📚",text:"מחשב/ציוד לבית ספר — שנתי",val:"₪1,200",cls:"neu"},
+  {icon:"🏫",text:"שכר לימוד אוניברסיטה — שנה",val:"₪12,000",cls:"dn"},
+  {icon:"🏫",text:"שכר לימוד מכללה — שנה",val:"₪9,500",cls:"neu"},
+  {icon:"📖",text:"קורס מקצועי/הכשרה",val:"₪3,000–8,000",cls:"neu"},
+  // 💰 פיננסים ומשכנתאות
+  {icon:"🏦",text:"ריבית בנק ישראל",val:"4.5%",cls:"neu"},
+  {icon:"🏦",text:"ריבית פריים",val:"6.0%",cls:"dn"},
+  {icon:"📊",text:"תל אביב 35 — 2026 YTD",val:"+13.4%",cls:"up"},
+  {icon:"📊",text:"S&P 500 — 2026 YTD",val:"-3.2%",cls:"dn"},
+  {icon:"📊",text:"נאסד\"ק 100 — 2026 YTD",val:"-6.1%",cls:"dn"},
+  {icon:"📊",text:"זהב — 2026 YTD",val:"+11.2%",cls:"up"},
+  {icon:"💵",text:"דולר-שקל",val:"₪3.62",cls:"neu"},
+  {icon:"💶",text:"אירו-שקל",val:"₪3.91",cls:"neu"},
+  {icon:"🏦",text:"ריבית משכנתא — ממוצע",val:"5.8%",cls:"dn"},
+  {icon:"🏦",text:"פיקדון ל-12 חודשים",val:"4.5%",cls:"up"},
+  {icon:"🏦",text:"קרן כספית שקלית — תשואה",val:"4.3%",cls:"up"},
+  {icon:"👴",text:"פנסיה — מסלול כללי 2025",val:"+9.1%",cls:"up"},
+  {icon:"🎓",text:"קרן השתלמות מנייתי 2025",val:"+28.7%",cls:"up"},
+  {icon:"💰",text:"שכר ממוצע — ישראל 2025",val:"₪12,800 נטו",cls:"up"},
+  {icon:"💰",text:"שכר מינימום — ינואר 2026",val:"₪6,000/חודש",cls:"up"},
+  {icon:"📉",text:"כוח קנייה ירד ב-2025",val:"-2.1%",cls:"dn"},
+  {icon:"🏧",text:"אוברדראפט ממוצע למשק בית",val:"₪14,000",cls:"dn"},
+  // 🌍 כלכלה עולמית רלוונטית
+  {icon:"🌍",text:"צמיחה גלובלית צפויה 2026",val:"+3.1%",cls:"up"},
+  {icon:"🇺🇸",text:"ריבית פד האמריקאי",val:"4.25%",cls:"neu"},
+  {icon:"🛢️",text:"נפט WTI — 2026 YTD",val:"-6.3%",cls:"up"},
+  {icon:"₿",text:"Bitcoin — 2026 YTD",val:"-14.8%",cls:"dn"},
+  {icon:"🥇",text:"זהב לאונקיה",val:"$2,910",cls:"up"},
+  // 🎬 בידור ופנאי
+  {icon:"🎬",text:"כרטיס קולנוע",val:"₪48–58",cls:"dn"},
+  {icon:"🎭",text:"כרטיס תיאטרון — ממוצע",val:"₪150–220",cls:"dn"},
+  {icon:"⚽",text:"כרטיס למשחק ליגה — ממוצע",val:"₪100–180",cls:"neu"},
+  {icon:"🎢",text:"כניסה למתחם ילדים",val:"₪120–180",cls:"dn"},
+  {icon:"🏊",text:"בריכה ציבורית — כניסה",val:"₪35",cls:"neu"},
+  {icon:"✈️",text:"טיסה לאירופה — הלוך-חזור",val:"₪1,800–3,500",cls:"neu"},
+  {icon:"🏨",text:"לינה במלון בישראל — לילה",val:"₪600–1,200",cls:"dn"},
+  // 👔 לבוש ואופנה
+  {icon:"👕",text:"חולצה בסיסית — ממוצע שוק",val:"₪80–120",cls:"neu"},
+  {icon:"👟",text:"נעלי ספורט — ממוצע",val:"₪350–600",cls:"dn"},
+  {icon:"🧥",text:"מעיל חורף — ממוצע",val:"₪400–900",cls:"neu"},
+  {icon:"👔",text:"הוצאה ממוצעת לבוש/חודש",val:"₪380",cls:"neu"},
+  // 🌱 קיימות וסביבה
+  {icon:"☀️",text:"מערכת סולארית ביתית — מחיר",val:"₪25,000–40,000",cls:"neu"},
+  {icon:"☀️",text:"חיסכון חשמל — מערכת סולארית",val:"₪300/חודש",cls:"up"},
+  {icon:"🚗",text:"רכב חשמלי — עלות בסיסית",val:"₪120,000",cls:"neu"},
+  {icon:"🌿",text:"עלות חינוך אקולוגי לילד",val:"₪400/חודש יותר",cls:"neu"},
+  // 🏋️ ספורט ובריאות
+  {icon:"🏃",text:"ריצת רחוב — חינם!",val:"₪0",cls:"up"},
+  {icon:"🚴",text:"אופניים חשמליים — ממוצע",val:"₪4,500",cls:"neu"},
+  {icon:"🩺",text:"בדיקות דם — קופת חולים",val:"ללא עלות",cls:"up"},
+  {icon:"🧴",text:"תרופות OTC — חודשי",val:"₪120",cls:"neu"},
+  // 🏠 תחזוקת בית
+  {icon:"🔨",text:"שיפוץ בסיסי — מ\"ר",val:"₪1,500–2,500",cls:"dn"},
+  {icon:"🪣",text:"ניקיון בית — פעם שבועית",val:"₪250–350",cls:"neu"},
+  {icon:"🌿",text:"גינון שבועי — ממוצע",val:"₪200",cls:"neu"},
+  {icon:"❄️",text:"מזגן — חשמל שנתי",val:"₪1,800",cls:"dn"},
+  {icon:"🛋️",text:"ריהוט לסלון — ממוצע",val:"₪12,000",cls:"neu"},
+  // 📊 מאקרו כלכלי ישראל
+  {icon:"📊",text:"אבטלה — ישראל ינואר 2026",val:"3.8%",cls:"up"},
+  {icon:"📊",text:"גירעון תקציבי — 2025",val:"5.1% מהתמ\"ג",cls:"dn"},
+  {icon:"📊",text:"צמיחת תמ\"ג — ישראל 2025",val:"+1.6%",cls:"neu"},
+  {icon:"📊",text:"ייצוא טכנולוגיה — ישראל",val:"$75B שנתי",cls:"up"},
+  {icon:"📊",text:"מדד אמון צרכנים — ינואר",val:"102.3",cls:"up"},
+  {icon:"🧾",text:"עלות מחיה — ישראל מדורגת",val:"מקום 16 עולמי",cls:"dn"},
+  {icon:"📈",text:"מדד ה-PMI — ינואר 2026",val:"51.2",cls:"up"},
+  // 💼 תעסוקה ושכר
+  {icon:"💼",text:"שכר מהנדס — ממוצע",val:"₪22,000 ברוטו",cls:"up"},
+  {icon:"💼",text:"שכר מורה — ממוצע",val:"₪11,500 ברוטו",cls:"neu"},
+  {icon:"💼",text:"שכר אחות — ממוצע",val:"₪14,000 ברוטו",cls:"up"},
+  {icon:"💼",text:"שכר עורך דין — ממוצע",val:"₪18,000 ברוטו",cls:"up"},
+  {icon:"💼",text:"שכר רופא שכיר — ממוצע",val:"₪25,000 ברוטו",cls:"up"},
+  {icon:"💼",text:"שכר מנהל בכיר — ממוצע",val:"₪40,000+ ברוטו",cls:"up"},
+  {icon:"📱",text:"שכר מפתח Software — ממוצע",val:"₪28,000 ברוטו",cls:"up"},
+  {icon:"💼",text:"שכר מינימום — שעתי",val:"₪35.20",cls:"up"},
+  // ₿ קריפטו
+  {icon:"₿",text:"Bitcoin — מחיר עדכני",val:"$97,400",cls:"up"},
+  {icon:"⬡",text:"Ethereum — מחיר עדכני",val:"$1,820",cls:"dn"},
+  {icon:"🔵",text:"Solana — מחיר עדכני",val:"$148",cls:"up"},
+  {icon:"⭕",text:"XRP — מחיר עדכני",val:"$2.21",cls:"up"},
+  {icon:"🐶",text:"Dogecoin — מחיר",val:"$0.18",cls:"dn"},
+  {icon:"₿",text:"Bitcoin — שינוי שנתי",val:"+118%",cls:"up"},
+  {icon:"⬡",text:"Ethereum — שינוי שנתי",val:"+44%",cls:"up"},
+  {icon:"📊",text:"שווי שוק קריפטו עולמי",val:"$3.1T",cls:"up"},
+  {icon:"🇮🇱",text:"קריפטו — משקיעים ישראליים",val:"~500K איש",cls:"neu"},
+  {icon:"🏦",text:"בנק ישראל — עמדה על קריפטו",val:"זהירות",cls:"neu"},
+  // 📈 מדדי עולם
+  {icon:"🇺🇸",text:"S&P 500 — שינוי שנתי",val:"+17.9%",cls:"up"},
+  {icon:"💻",text:'נאסד"ק 100 — שינוי שנתי',val:"+21.1%",cls:"up"},
+  {icon:"🇮🇱",text:'ת"א 35 — שינוי שנתי',val:"+52%",cls:"up"},
+  {icon:"🌍",text:"MSCI World — שינוי שנתי",val:"+18.7%",cls:"up"},
+  {icon:"🇩🇪",text:"DAX גרמניה — שנתי",val:"+19%",cls:"up"},
+  {icon:"🇬🇧",text:"FTSE 100 — שנתי",val:"+8%",cls:"up"},
+  {icon:"🇯🇵",text:"Nikkei 225 — שנתי",val:"+14%",cls:"up"},
+  {icon:"🔬",text:"SOXX מוליכים למחצה",val:"+35.4%",cls:"up"},
+  {icon:"🥇",text:"זהב — מחיר לאונקיה",val:"$3,280",cls:"up"},
+  {icon:"🥇",text:"זהב — שינוי שנתי",val:"+27.2%",cls:"up"},
+  {icon:"🛢️",text:"נפט Brent — לחבית",val:"$74.2",cls:"dn"},
+  {icon:"⚡",text:"גז טבעי — מחיר",val:"$2.85/MMBtu",cls:"dn"},
+  // 🏦 ריביות וחסכונות
+  {icon:"🏦",text:"ריבית בנק ישראל",val:"4.5%",cls:"neu"},
+  {icon:"🏦",text:"ריבית פד האמריקאי",val:"4.25–4.5%",cls:"neu"},
+  {icon:"💵",text:"פיקדון שקלי 12 חודש — ממוצע",val:"4.6%",cls:"up"},
+  {icon:"💵",text:"קרן כספית שקלית — תשואה",val:"4.3%",cls:"up"},
+  {icon:"🎓",text:'קרן השתלמות — מניות, תשואה שנתית',val:"28.7%",cls:"up"},
+  {icon:"👴",text:"פנסיה מסלול כללי — שנתי",val:"9.1%",cls:"up"},
+  {icon:"📜",text:'אג"ח ממשלתי 10 שנה',val:"4.2%",cls:"neu"},
+  {icon:"📄",text:'אג"ח קונצרני — תשואה',val:"5.8%",cls:"up"},
+  {icon:"🏛️",text:"אינפלציה ישראל — שנתית",val:"3.4%",cls:"dn"},
+  {icon:"🌐",text:"אינפלציה ארה\"ב — שנתית",val:"2.9%",cls:"dn"},
+  // 🏠 נדל"ן ומשכנתאות
+  {icon:"🏠",text:"ריבית משכנתא — קבועה",val:"4.9%",cls:"dn"},
+  {icon:"🏠",text:"ריבית משכנתא — משתנה",val:"4.2%",cls:"neu"},
+  {icon:"🏠",text:"עסקאות דירות — ירידה שנתית",val:"-8%",cls:"dn"},
+  {icon:"🏗️",text:"התחלות בנייה — 2025",val:"55,000 יח'",cls:"up"},
+  {icon:"🔑",text:"תשואת שכירות ממוצעת",val:"3.2%",cls:"dn"},
+  {icon:"📐",text:"מחיר מ\"ר — תל אביב",val:"₪58,000",cls:"dn"},
+  {icon:"📐",text:'מחיר מ"ר — ירושלים',val:"₪45,000",cls:"dn"},
+  {icon:"📐",text:'מחיר מ"ר — חיפה',val:"₪28,000",cls:"up"},
+  {icon:"🏡",text:"מחיר דירה ממוצע — ישראל",val:"₪2.1M",cls:"dn"},
+  {icon:"💳",text:"גרעון תקציבי — 2025",val:"6.2% תוצר",cls:"dn"},
+  // 💰 מט"ח
+  {icon:"💱",text:"דולר-שקל",val:"₪3.68",cls:"neu"},
+  {icon:"💱",text:"אירו-שקל",val:"₪4.08",cls:"up"},
+  {icon:"💱",text:"פאונד-שקל",val:"₪4.78",cls:"up"},
+  {icon:"💱",text:"ין יפני — שקל",val:"₪0.025",cls:"dn"},
+  {icon:"💱",text:"דולר-שקל — שינוי שנתי",val:"-2.1%",cls:"up"},
+];
+
+// Categorized refresh batches — AI freshens these every 3h
+let TICKER_CURRENT = [...TICKER_BANK];
+let tickerLastRefresh = 0;
+const REFRESH_INTERVAL = 30 * 60 * 1000; // 30 minutes
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildTicker(items) {
+  // Always show all items + duplicate for seamless infinite loop
+  const all = [...items, ...items];
+  const html = all.map(it =>
+    `<span class="ti"><span class="ti-icon">${it.icon}</span><span>${it.text}:</span><span class="ti-val ${it.cls}">${it.val}</span></span><span class="ti-dot"></span>`
+  ).join("");
+  const el = document.getElementById("tickerInner");
+  // Crossfade: fade out → update → fade in
+  el.style.transition = "opacity 0.6s";
+  el.style.opacity = "0";
+  setTimeout(() => {
+    el.innerHTML = html;
+    // Reset animation by cloning
+    const fresh = el.cloneNode(true);
+    el.parentNode.replaceChild(fresh, el);
+    fresh.style.opacity = "0";
+    fresh.style.transition = "opacity 0.6s";
+    setTimeout(() => { fresh.style.opacity = "1"; }, 30);
+  }, 650);
+}
+
+async function refreshTickerWithAI() {
+  const now = Date.now();
+  if (now - tickerLastRefresh < REFRESH_INTERVAL && tickerLastRefresh !== 0) return;
+  tickerLastRefresh = now;
+
+  // Update the badge to show refreshing
+  const badge = document.querySelector(".ticker-badge span:last-child");
+  if (badge) badge.textContent = "מתרענן...";
+
+  try {
+    const today = new Date().toLocaleDateString("he-IL", {day:"numeric",month:"long",year:"numeric"});
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{
+          role: "user",
+          content: `אתה עוזר של אפליקציה פיננסית ישראלית בשם "מגן כסף". התאריך היום: ${today}.
+צור בדיוק 30 עדכוני טיקר כלכליים חדשים ומגוונים בעברית. כסה כל יום נושאים שונים: בורסות (ת"א 35, S&P 500, נאסד"ק, DAX, FTSE), קריפטו (Bitcoin, Ethereum, Solana, XRP), מט"ח (דולר-שקל, אירו, פאונד), סחורות (זהב, נפט, גז), השקעות (קרנות נאמנות, ETF, קרן השתלמות, פנסיה), ריביות ומשכנתאות, נדל"ן ישראלי, אינפלציה, שוק העבודה, מחירי מזון ואנרגיה, חסכונות ופיקדונות, ביטוח.
+החזר JSON בלבד — מערך: icon (emoji פיננסי), text (עד 6 מילים בעברית), val (מספר/אחוז/ערך), cls ("up"/"dn"/"neu").
+ענה JSON בלבד.`
+        }]
+      })
+    });
+
+    if (!resp.ok) throw new Error("API error");
+    const data = await resp.json();
+    const raw = data.content.map(c => c.text || "").join("");
+    const clean = raw.replace(/```json|```/g, "").trim();
+    const fresh = JSON.parse(clean);
+    if (Array.isArray(fresh) && fresh.length >= 5) {
+      // Merge AI items into pool — add to front for freshness, keep full bank as fallback
+      TICKER_CURRENT = [...fresh, ...shuffleArray(TICKER_BANK)];
+      buildTicker(TICKER_CURRENT);
+      if (badge) badge.textContent = "עדכונים";
+      console.log(`[Ticker] Refreshed with ${fresh.length} AI items`);
+    } else {
+      throw new Error("Invalid AI response");
+    }
+  } catch (e) {
+    // Silently fall back — shuffle existing pool
+    if (badge) badge.textContent = "עדכונים";
+    TICKER_CURRENT = shuffleArray(TICKER_BANK);
+    buildTicker(TICKER_CURRENT);
+    console.log("[Ticker] AI refresh failed, using shuffled bank:", e.message);
+  }
+}
+
+// Initial load — shuffle and display all items immediately
+TICKER_CURRENT = shuffleArray(TICKER_BANK);
+buildTicker(TICKER_CURRENT);
+
+// Trigger AI refresh on load (after 2s to not block UI)
+setTimeout(() => refreshTickerWithAI(), 2000);
+
+// Re-check every 15 minutes
+setInterval(() => refreshTickerWithAI(), 15 * 60 * 1000);
+
+// Also reshuffle static content every hour for variety even without AI
+setInterval(() => {
+  if (Date.now() - tickerLastRefresh < REFRESH_INTERVAL) {
+    TICKER_CURRENT = shuffleArray(TICKER_CURRENT);
+    buildTicker(TICKER_CURRENT);
+  }
+}, 60 * 60 * 1000);
+</script>
+</body>
+</html>
