@@ -1,19 +1,12 @@
 name: Auto-Update Financial Data
 
 on:
-schedule:
+  schedule:
     - cron: '0 23 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
-
-jobs:
-  update-data:
-  schedule:
-    # רץ כל יום ב-2:00 בלילה (שעון UTC)
-    - cron: '0 23 * * *'
-  workflow_dispatch: # אפשר להריץ ידנית
 
 jobs:
   update-data:
@@ -38,10 +31,8 @@ jobs:
           async function updateData() {
             console.log('🔄 מעדכן נתונים פיננסיים...');
             
-            // קרא את הקובץ
             let html = fs.readFileSync('magen-kessef.html', 'utf8');
             
-            // קרא ל-Claude API לקבלת נתונים עדכניים
             const response = await fetch('https://api.anthropic.com/v1/messages', {
               method: 'POST',
               headers: {
@@ -89,69 +80,57 @@ jobs:
             const data = await response.json();
             let jsonData = '';
             
-            // חלץ JSON מהתשובה
             for (const block of data.content) {
               if (block.type === 'text') {
                 jsonData += block.text;
               }
             }
             
-            // נקה markdown אם יש
             jsonData = jsonData.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
             const numbers = JSON.parse(jsonData);
             
             console.log('📊 נתונים שהתקבלו:', numbers);
             
-            // עדכן את הנתונים בקובץ
-            // S&P 500 YTD
             html = html.replace(
               /"S&P 500":\s*{[^}]*ytd:\s*-?[\d.]+/,
               `"S&P 500": {ic:"🇺🇸",cat:"מניות עולמי",ytd:${numbers.sp500_ytd}`
             );
             
-            // Ticker S&P 500
             html = html.replace(
               /text:"S&P 500 — 2026 YTD",val:"[^"]+"/,
               `text:"S&P 500 — 2026 YTD",val:"${numbers.sp500_ytd > 0 ? '+' : ''}${numbers.sp500_ytd}%"`
             );
             
-            // ת"א 35
             html = html.replace(
               /text:'ת"א 35 — שינוי שנתי',val:"[^"]+"/,
               `text:'ת"א 35 — שינוי שנתי',val:"${numbers.ta35_ytd > 0 ? '+' : ''}${numbers.ta35_ytd}%"`
             );
             
-            // Bitcoin
             html = html.replace(
               /text:"Bitcoin — מחיר עדכני",val:"\$[\d,]+"/,
               `text:"Bitcoin — מחיר עדכני",val:"$${Math.round(numbers.btc).toLocaleString()}"`
             );
             
-            // Ethereum  
             html = html.replace(
               /text:"Ethereum — מחיר עדכני",val:"\$[\d,]+"/,
               `text:"Ethereum — מחיר עדכני",val:"$${Math.round(numbers.eth).toLocaleString()}"`
             );
             
-            // דולר-שקל
             html = html.replace(
               /text:"דולר-שקל",val:"₪[\d.]+"/,
               `text:"דולר-שקל",val:"₪${numbers.usd_ils.toFixed(2)}"`
             );
             
-            // זהב
             html = html.replace(
               /text:"זהב — מחיר לאונקיה",val:"\$[\d,]+"/,
               `text:"זהב — מחיר לאונקיה",val:"$${Math.round(numbers.gold).toLocaleString()}"`
             );
             
-            // ריבית בנק ישראל
             html = html.replace(
               /text:"ריבית בנק ישראל",val:"[\d.]+%"/,
               `text:"ריבית בנק ישראל",val:"${numbers.boi_rate}%"`
             );
             
-            // שמור את הקובץ
             fs.writeFileSync('magen-kessef.html', html);
             
             console.log('✅ הנתונים עודכנו בהצלחה!');
