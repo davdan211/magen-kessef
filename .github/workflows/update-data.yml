@@ -1,6 +1,15 @@
 name: Auto-Update Financial Data
 
 on:
+schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
   schedule:
     # רץ כל יום ב-2:00 בלילה (שעון UTC)
     - cron: '0 23 * * *'
