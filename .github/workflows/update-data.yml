@@ -143,11 +143,9 @@ jobs:
           node update-data.js
       
       - name: Commit and push if changed
-        run: |
-          git config user.name "Auto Update Bot"
-          git config user.email "bot@magen-kessef.com"
-          git add magen-kessef.html
-          if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "🤖 Auto-update: Financial data $(date +'%Y-%m-%d %H:%M')"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
-          fi
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 Auto-update: Financial data"
+          commit_user_name: Auto Update Bot
+          commit_user_email: bot@magen-kessef.com
+          file_pattern: magen-kessef.html
