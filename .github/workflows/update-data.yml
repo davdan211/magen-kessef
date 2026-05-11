@@ -147,4 +147,7 @@ jobs:
           git config user.name "Auto Update Bot"
           git config user.email "bot@magen-kessef.com"
           git add magen-kessef.html
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-update: Financial data $(date +'%Y-%m-%d %H:%M')" && git push)
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git commit -m "🤖 Auto-update: Financial data $(date +'%Y-%m-%d %H:%M')"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+          fi
